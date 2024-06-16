@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+<head>
+    <title>Admin</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+</head>
+<body>
+<nav class="nav-bar">
+    <ul>
+        <li><a th:href="@{/home}">Home</a></li>
+        <li><a th:href="@{/shopping}">Shopping</a></li>
+        <li><a th:href="@{/cart}">Cart</a></li>
+        <li><a th:href="@{/admin}">Admin</a></li>
+        <li><form th:action="@{/logout}" method="post">
+            <input type="submit" value="Sign Out"/>
+        </form></li>
+        <li class="nav-user">
+            <span class="username-circle" th:text="${#authentication.name}"></span>
+        </li>
+    </ul>
+</nav>
+<div class="container-book-table">
+    <h1>Edit Shopping List</h1>
+    <div class="actions-search-field">
+        <input type="text" id="searchField" placeholder="Search" style="width: 50%;" />
+        <button id="addBookButton">Add new Book</button>
+    </div>
+    <table class="book-table">
+        <thead>
+        <tr>
+            <th>Title</th>
+            <th>Author</th>
+            <th>Price</th>
+            <th>Stock</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <!--/*@thymesVar id="books" type=""*/-->
+        <tr th:each="book : ${books}">
+            <td th:text="${book.title}">Example Book</td>
+            <td th:text="${book.author}">Author Name</td>
+            <td th:text="${book.price}">$19.99</td>
+            <td th:text="${book.stockBook}">100</td>
+            <td>
+                <button>Edit</button>
+                <button>Delete</button>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <div id="validationMessages">
+        <p th:if="${priceValidationMessage}" th:text="${priceValidationMessage}" class="priceValidationMessage"></p>
+        <p th:if="${stockValidationMessage}" th:text="${stockValidationMessage}" class="stockValidationMessage"></p>
+    </div>
+</div>
+
+
+
+
+<!-- Add your shopping content here -->
+</body>
+</html>

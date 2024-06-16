@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+<head>
+    <title>Cart</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+</head>
+<body>
+<nav class="nav-bar">
+    <ul>
+        <li><a th:href="@{/home}">Home</a></li>
+        <li><a th:href="@{/shopping}">Shopping</a></li>
+        <li><a th:href="@{/cart}">Cart</a></li>
+        <li><a th:href="@{/admin}">Admin</a></li>
+        <li><form th:action="@{/logout}" method="post">
+            <input type="submit" value="Sign Out"/>
+        </form></li>
+        <li class="nav-user">
+            <span class="username-circle" th:text="${#authentication.name}"></span>
+        </li>
+    </ul>
+</nav>
+<h1>Welcome to the Cart Page!</h1>
+
+<div class="user-details" th:if="${currentUser != null}">
+    <h2>User Details</h2>
+    <p><strong>Username:</strong> <span th:text="${currentUser.userName}"></span></p>
+    <p><strong>Email:</strong> <span th:text="${currentUser.email}"></span></p>
+</div>
+<div class="user-details" th:if="${currentUser == null}">
+    <p>User details are not available.</p>
+</div>
+
+<div class="container-book-table">
+    <h1>Book Store</h1>
+    <table class="book-table">
+        <thead>
+        <tr>
+            <th>Book</th>
+            <th>Name</th>
+            <th>Price</th>
+            <th>Quantity</th>
+            <th>Total</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="cartItem : ${cartItems}">
+            <td><img th:src="@{${cartItem.book.imageUrl}}" alt="Book Image" class="book-image"/></td>
+            <td th:text="${cartItem.book.title}"></td>
+            <td th:text="${cartItem.book.price}"></td>
+            <td th:text="${cartItem.quantity}"></td>
+            <td th:text="${cartItem.book.price * cartItem.quantity}"></td>
+            <td>
+                <button>Edit</button>
+                <button>Delete</button>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <div class="final-price">
+        <label>Total Price: </label>
+        <span th:text="${totalPrice}"></span>
+    </div>
+</div>
+
+</body>
+</html>
