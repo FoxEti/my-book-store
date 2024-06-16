@@ -47,7 +47,7 @@
     </table>
 </div>
 
-<script>
+<script th:inline="javascript">
     function addToCart(bookId) {
         fetch('/add-to-cart', {
             method: 'POST',
