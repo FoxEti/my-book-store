@@ -14,9 +14,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
+import java.util.Map;
 
 @Controller
 public class CartController {
@@ -51,7 +53,8 @@ public class CartController {
     }
 
     @PostMapping("/add-to-cart")
-    public ResponseEntity<?> addToCart(@RequestParam Long bookId) {
+    public ResponseEntity<?> addToCart(@RequestBody Map<String, Long> payload) {
+        Long bookId = payload.get("bookId");
         Users currentUser = userService.getCurrentUser();
         if (currentUser == null) {
             return ResponseEntity.badRequest().body("User not logged in.");
