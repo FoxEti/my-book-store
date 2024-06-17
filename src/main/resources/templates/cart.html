@@ -52,7 +52,7 @@
             <td th:text="${cartItem.quantity}"></td>
             <td th:text="${cartItem.book.price * cartItem.quantity}"></td>
             <td>
-                <button>Delete</button>
+                <button class="btn btn-danger" th:onclick="'deleteFromCart(' + ${cartItem.id} + ')'">Delete</button>
             </td>
         </tr>
         </tbody>

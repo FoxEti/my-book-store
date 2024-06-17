@@ -10,16 +10,19 @@ import com.example.bookstore.repository.CartItemRepository;
 import com.example.bookstore.repository.CartRepository;
 import com.example.bookstore.repository.UserRepository;
 import jakarta.transaction.Transactional;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class CartItemService {
+    private static final Logger logger = LoggerFactory.getLogger(CartItemService.class);
 
     private final CartItemRepository cartItemRepository;
     private final UserRepository userRepository;
@@ -42,23 +45,6 @@ public class CartItemService {
             userName = principal.toString();
         }
         return userRepository.findByUserName(userName);
-    }
-
-    @Transactional
-    public void addNewItemToCart(CartItem cartItem) {
-        cartItemRepository.save(cartItem);
-    }
-
-    public void deleteCartItem(CartItem cartItem) {
-        cartItemRepository.delete(cartItem);
-    }
-
-    public void updateCartItem(CartItem existingItem) {
-        cartItemRepository.save(existingItem);
-    }
-
-    public void deleteItemByBookId(Long id) {
-        cartItemRepository.deleteByBookId(id);
     }
 
     public List<CartItem> getCartItemsForUser(Users currentUser) {

@@ -1,6 +1,7 @@
 package com.example.bookstore.controller;
 
 import com.example.bookstore.models.Book;
+import com.example.bookstore.models.Cart;
 import com.example.bookstore.models.CartItem;
 import com.example.bookstore.models.Users;
 import com.example.bookstore.services.CartItemService;
@@ -19,16 +20,21 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Controller
 public class CartController {
 
+    private static final Logger logger = LoggerFactory.getLogger(CartController.class);
+
     private final CartItemService cartItemService;
     private final UsersService userService;
+    private final CartService cartService;
 
-    public CartController(CartItemService cartItemService, UsersService userService) {
+    public CartController(CartItemService cartItemService, UsersService userService, CartService cartService) {
         this.cartItemService = cartItemService;
         this.userService = userService;
+        this.cartService = cartService;
     }
 
 
@@ -62,4 +68,6 @@ public class CartController {
         cartItemService.addBookToCart(currentUser, bookId);
         return ResponseEntity.ok().build();
     }
+
+
 }
