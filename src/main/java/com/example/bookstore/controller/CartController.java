@@ -30,16 +30,13 @@ public class CartController {
 
     private final CartItemService cartItemService;
     private final UsersService userService;
-    private final CartService cartService;
     private final BookController bookService;
 
     public CartController(CartItemService cartItemService, UsersService userService, CartService cartService, BookController bookService) {
         this.cartItemService = cartItemService;
         this.userService = userService;
-        this.cartService = cartService;
         this.bookService = bookService;
     }
-
 
     @GetMapping("/cart")
     public String cartPage(Model model) {

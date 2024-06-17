@@ -29,14 +29,6 @@ public class BookService {
         return bookRepository.searchByTitleOrAuthor("%" + keyword.toLowerCase() + "%");
     }
 
-    public void updateBook(Book updatedBook) {
-        bookRepository.save(updatedBook);
-    }
-
-    public void deleteBook(Book book) {
-        bookRepository.delete(book);
-    }
-
     public Book getBookById(Long bookId) {
         return bookRepository.findBookById(bookId);
     }

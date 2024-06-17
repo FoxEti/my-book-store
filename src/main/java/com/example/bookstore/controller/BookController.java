@@ -17,11 +17,11 @@ public class BookController {
         this.bookService = bookService;
     }
 
-    @GetMapping("/book/{id}")
-    public String getBookById(@PathVariable("id") Long id, Model model) {
+    @GetMapping("/bookDetails/{id}")
+    public String bookDetails(@PathVariable Long id, Model model) {
         Book book = bookService.getBookById(id);
         model.addAttribute("book", book);
-        return "bookDetails"; // Make sure you have a corresponding Thymeleaf template for book details
+        return "bookDetails"; // The name of your HTML template for book details
     }
 
     public Book getBookById(Book book) {

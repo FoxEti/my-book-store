@@ -28,7 +28,7 @@
         <tr>
             <th>Book</th>
             <th>Title</th>
-            <th>Author</th>
+            <th>Book's details</th>
             <th>Price</th>
             <th>Add to Cart</th>
         </tr>
@@ -37,7 +37,9 @@
         <tr th:each="book : ${books}">
             <td><img th:src="@{${book.imageUrl}}" alt="Book Image" class="book-image"/></td>
             <td th:text="${book.title}"></td>
-            <td th:text="${book.author}"></td>
+            <td>
+                <a th:href="@{/bookDetails/{id}(id=${book.id})}">more details</a>
+            </td>
             <td th:text="${book.price}"></td>
             <td>
                 <button class="btn btn-primary" th:onclick="'addToCart(' + ${book.id} + ')'">Add to Cart</button>
