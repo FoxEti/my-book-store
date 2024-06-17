@@ -77,4 +77,7 @@ public class CartItemService {
         return cartRepository.findByUser(user);
     }
 
+    public void deleteCartItem(Long cartItemId) {
+        cartItemRepository.deleteCartItem(cartItemId);
+    }
 }

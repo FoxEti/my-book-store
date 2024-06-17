@@ -44,13 +44,13 @@
         </tr>
         </thead>
         <tbody>
-        <tr th:each="cartItem : ${cartItems}">
+        <tr th:each="cartItem : ${cartItems}" th:id="'cart-item-' + ${cartItem.id}">
             <td><img th:src="@{${cartItem.book.imageUrl}}" alt="Book Image" class="book-image"/></td>
             <td th:text="${cartItem.book.title}"></td>
             <td th:text="${cartItem.book.price}"></td>
             <td th:text="${bookQuantities[cartItem.book.id]}"></td>
             <td>
-                <button class="btn btn-danger" th:onclick="'deleteFromCart(' + ${cartItem.id} + ')'">Delete</button>
+            <button class="btn btn-danger" th:onclick="'deleteFromCart(' + ${cartItem.id} + ')'">Delete</button>
             </td>
         </tr>
         </tbody>
@@ -60,6 +60,37 @@
         <span th:text="${totalPrice}"></span>
     </div>
 </div>
+
+<script>
+    function deleteFromCart(cartItemId) {
+        fetch('/delete-from-cart', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': `[[${_csrf.token}]]`
+            },
+            body: JSON.stringify({ cartItemId: cartItemId })
+        })
+            .then(response => {
+                if (response.ok) {
+                    // Item deleted successfully - update cart view here
+                    console.log("Cart item deleted successfully!");
+                    // Remove the specific cart item row from the table (example)
+                    document.getElementById(`cart-item-${cartItemId}`).remove();
+                } else {
+                    console.error("Error deleting cart item:", response.statusText);
+                    // Handle deletion error (e.g., display an error message)
+                }
+            })
+            .catch(error => {
+                debugger;
+                console.error("Error deleting cart item:", error);
+                // Handle network or other errors
+            });
+    }
+</script>
+
+
 
 </body>
 </html>

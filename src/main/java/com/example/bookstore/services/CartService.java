@@ -8,6 +8,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 
 @Service
 public class CartService {
@@ -20,19 +22,6 @@ public class CartService {
     public CartService(CartRepository cartRepository, UserRepository userRepository) {
         this.cartRepository = cartRepository;
         this.userRepository = userRepository;
-    }
-
-    @Transactional
-    public Cart createCart() {
-        Cart cart = new Cart();
-        return cartRepository.save(cart);
-    }
-
-    @Transactional
-    public void clearCart(Long cartId) {
-        Cart cart = cartRepository.findById(cartId).orElseThrow(() -> new RuntimeException("Cart not found"));
-        cart.getItems().clear();
-        cartRepository.save(cart);
     }
 
     @Transactional
@@ -49,5 +38,9 @@ public class CartService {
         Cart cart = getCartByUserId(userId);
         cart.getItems().removeIf(item -> item.getId().equals(itemId));
         cartRepository.save(cart);
+    }
+
+    public Optional<Cart> findCartById(Long cartId) {
+        return cartRepository.findById(cartId);
     }
 }

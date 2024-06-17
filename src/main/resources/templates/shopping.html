@@ -50,6 +50,7 @@
 </div>
 
 <script th:inline="javascript">
+
     function addToCart(bookId) {
         fetch('/add-to-cart', {
             method: 'POST',
@@ -72,5 +73,6 @@
             });
     }
 </script>
+
 </body>
 </html>
