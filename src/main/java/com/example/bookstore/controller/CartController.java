@@ -75,7 +75,7 @@ public class CartController {
         Long bookId = payload.get("bookId");
         Users currentUser = userService.getCurrentUser();
         if (currentUser == null) {
-            return ResponseEntity.badRequest().body("User not logged in.");
+            return ResponseEntity.badRequest().body("User not logged in...");
         }
         cartItemService.addOrUpdateCartItem(currentUser, bookId, 1);
         return ResponseEntity.ok().build();
