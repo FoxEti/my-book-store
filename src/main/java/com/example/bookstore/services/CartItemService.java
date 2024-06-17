@@ -27,13 +27,13 @@ public class CartItemService {
     private final CartItemRepository cartItemRepository;
     private final UserRepository userRepository;
     private final CartRepository cartRepository;
-    private final BookRepository bookRepository;
+    private final BookService bookService;
 
-    public CartItemService(CartItemRepository cartItemRepository, UserRepository userRepository, CartRepository cartRepository, BookRepository bookRepository) {
+    public CartItemService(CartItemRepository cartItemRepository, UserRepository userRepository, CartRepository cartRepository, BookService bookServise){
         this.cartItemRepository = cartItemRepository;
         this.userRepository = userRepository;
         this.cartRepository = cartRepository;
-        this.bookRepository = bookRepository;
+        this.bookService = bookServise;
     }
 
     private Users getCurrentUser() {
@@ -55,19 +55,26 @@ public class CartItemService {
         return cartItemRepository.findByCart(cart);
     }
 
-    @Transactional
-    public void addBookToCart(Users user, Long bookId) {
-        Cart cart = cartRepository.findByUser(user);
-        if (cart == null) {
-            cart = new Cart();
-            cart.setUser(user);
-            cartRepository.save(cart);
+    public void addOrUpdateCartItem(Users user, Long bookId, int quantity) {
+        Book book = bookService.getBookById(bookId);
+        Cart cart = getCartByUser(user); // Implement this method to get the cart by user
+        CartItem existingCartItem = cartItemRepository.findByCartAndBook(cart, book);
+        if (existingCartItem != null) {
+            existingCartItem.setQuantity(existingCartItem.getQuantity() + quantity);
+            cartItemRepository.save(existingCartItem);
+        } else {
+            CartItem newCartItem = new CartItem();
+            newCartItem.setBook(book);
+            newCartItem.setCart(cart);
+            newCartItem.setQuantity(quantity);
+            cartItemRepository.save(newCartItem);
         }
-
-        Book book = bookRepository.findById(bookId).orElseThrow(() -> new RuntimeException("Book not found"));
-        CartItem cartItem = new CartItem();
-        cartItem.setBook(book);
-        cartItem.setCart(cart);
-        cartItemRepository.save(cartItem);
     }
+
+    // Method to get the cart by user, implement according to your logic
+    private Cart getCartByUser(Users user) {
+        // Fetch the cart for the user
+        return cartRepository.findByUser(user);
+    }
+
 }

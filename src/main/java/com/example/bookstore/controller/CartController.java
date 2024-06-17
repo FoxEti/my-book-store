@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -30,11 +31,13 @@ public class CartController {
     private final CartItemService cartItemService;
     private final UsersService userService;
     private final CartService cartService;
+    private final BookController bookService;
 
-    public CartController(CartItemService cartItemService, UsersService userService, CartService cartService) {
+    public CartController(CartItemService cartItemService, UsersService userService, CartService cartService, BookController bookService) {
         this.cartItemService = cartItemService;
         this.userService = userService;
         this.cartService = cartService;
+        this.bookService = bookService;
     }
 
 
@@ -50,10 +53,19 @@ public class CartController {
         model.addAttribute("cartItems", cartItems);
         model.addAttribute("currentUser", currentUser);
 
-        double totalPrice = cartItems.stream()
-                .mapToDouble(cartItem -> cartItem.getBook().getPrice() * cartItem.getQuantity())
-                .sum();
+        double totalPrice = 0;
+        Map<Long, Integer> bookQuantities = new HashMap<>();
+        for (CartItem cartItem : cartItems) {
+
+            Book book = bookService.getBookById(cartItem.getBook());
+            cartItem.setBook(book); // Assuming you have a setter for Book in CartItem
+            totalPrice += book.getPrice() * cartItem.getQuantity();
+
+            bookQuantities.put(cartItem.getBook().getId(),
+                    bookQuantities.getOrDefault(cartItem.getBook().getId(), 0) + cartItem.getQuantity());
+        }
         model.addAttribute("totalPrice", totalPrice);
+        model.addAttribute("bookQuantities", bookQuantities);
 
         return "cart"; // The name of your HTML template file
     }
@@ -65,7 +77,7 @@ public class CartController {
         if (currentUser == null) {
             return ResponseEntity.badRequest().body("User not logged in.");
         }
-        cartItemService.addBookToCart(currentUser, bookId);
+        cartItemService.addOrUpdateCartItem(currentUser, bookId, 1);
         return ResponseEntity.ok().build();
     }
 

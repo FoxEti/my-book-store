@@ -40,7 +40,6 @@
             <th>Name</th>
             <th>Price</th>
             <th>Quantity</th>
-            <th>Total</th>
             <th>Actions</th>
         </tr>
         </thead>
@@ -49,8 +48,7 @@
             <td><img th:src="@{${cartItem.book.imageUrl}}" alt="Book Image" class="book-image"/></td>
             <td th:text="${cartItem.book.title}"></td>
             <td th:text="${cartItem.book.price}"></td>
-            <td th:text="${cartItem.quantity}"></td>
-            <td th:text="${cartItem.book.price * cartItem.quantity}"></td>
+            <td th:text="${bookQuantities[cartItem.book.id]}"></td>
             <td>
                 <button class="btn btn-danger" th:onclick="'deleteFromCart(' + ${cartItem.id} + ')'">Delete</button>
             </td>

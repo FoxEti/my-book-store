@@ -1,5 +1,6 @@
 package com.example.bookstore.repository;
 
+import com.example.bookstore.models.Book;
 import com.example.bookstore.models.Cart;
 import com.example.bookstore.models.CartItem;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -16,4 +17,5 @@ public interface CartItemRepository extends JpaRepository<CartItem, Long> {
     List<CartItem> findByCart(Cart cart);
 
 
+    CartItem findByCartAndBook(Cart cart, Book book);
 }
