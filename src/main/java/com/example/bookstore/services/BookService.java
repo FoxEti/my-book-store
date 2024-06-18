@@ -25,16 +25,18 @@ public class BookService {
         System.out.println(book);
     }
 
-    public List<Book> searchBooks(String keyword) {
-        return bookRepository.searchByTitleOrAuthor("%" + keyword.toLowerCase() + "%");
-    }
-
     public Book getBookById(Long bookId) {
         return bookRepository.findBookById(bookId);
     }
 
     public List<Book> getAllBooks() {
         return bookRepository.findAll();
+    }
+
+
+
+    public List<Book> searchBooks(String keyword) {
+        return bookRepository.findByTitleContainingOrAuthorContainingOrCategoryContaining(keyword, keyword, keyword);
     }
 
 
