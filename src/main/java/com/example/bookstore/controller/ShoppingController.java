@@ -29,7 +29,4 @@ public class ShoppingController {
         model.addAttribute("books", books);
         return "shopping";
     }
-
-
-
 }

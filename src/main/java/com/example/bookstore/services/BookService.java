@@ -19,12 +19,6 @@ public class BookService {
         this.bookRepository = bookRepository;
     }
 
-    @Transactional
-    public void addNewBook(Book book) {
-        bookRepository.save(book);
-        System.out.println(book);
-    }
-
     public Book getBookById(Long bookId) {
         return bookRepository.findBookById(bookId);
     }
@@ -33,10 +27,12 @@ public class BookService {
         return bookRepository.findAll();
     }
 
-
-
     public List<Book> searchBooks(String keyword) {
         return bookRepository.findByTitleContainingOrAuthorContainingOrCategoryContaining(keyword, keyword, keyword);
+    }
+
+    public void addBook(Book book) {
+        bookRepository.save(book);
     }
 
 

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
+<head>
+  <title>Add Book</title>
+  <link rel="stylesheet" th:href="@{/css/style.css}" />
+</head>
+<body>
+<div class="container-add-book">
+  <h1>Add New Book</h1>
+  <form>
+    <div class="form-group">
+      <label for="title">Title:</label>
+      <input type="text" id="title" name="title" required />
+    </div>
+    <div class="form-group">
+      <label for="author">Author:</label>
+      <input type="text" id="author" name="author" required />
+    </div>
+    <div class="form-group">
+      <label for="category">Category:</label>
+      <input type="text" id="category" name="category" required />
+    </div>
+    <div class="form-group">
+      <label for="price">Price:</label>
+      <input type="number" id="price" name="price" required />
+    </div>
+    <div class="form-group">
+      <label for="imageUrl">Image URL:</label>
+      <input type="text" id="imageUrl" name="imageUrl" required />
+    </div>
+    <div class="form-group">
+      <label for="imageUrl">Book's details:</label>
+      <input type="text" id="details" name="imageUrl" required />
+    </div>
+    <div class="form-group">
+      <label for="imageUrl">Stock of book:</label>
+      <input type="text" id="stock" name="imageUrl" required />
+    </div>
+    <div class="form-actions">
+      <button type="submit" class="btn btn-primary">Add Book</button>
+      <button type="button" class="btn btn-secondary" onclick="window.location.href='/admin'">Cancel</button>
+    </div>
+  </form>
+</div>
+</body>
+</html>

@@ -2,7 +2,6 @@ package com.example.bookstore.controller;
 
 import com.example.bookstore.models.Book;
 import com.example.bookstore.services.BookService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;

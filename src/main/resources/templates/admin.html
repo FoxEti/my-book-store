@@ -22,34 +22,38 @@
 </nav>
 <div class="container-book-table">
     <h1>Edit Shopping List</h1>
+
     <div class="actions-search-field">
-        <input type="text" id="searchField" placeholder="Search" style="width: 50%;" />
-        <button id="addBookButton">Add new Book</button>
+        <input type="text" id="searchField" placeholder="Search by book name, author or category" style="width: 50%;" />
+        <button id="searchButton">Search</button>
+        <button id="addBookButton" onclick="window.location.href='/addBook'">Add new Book</button>
     </div>
+
     <table class="book-table">
         <thead>
         <tr>
+            <th>Book</th>
             <th>Title</th>
-            <th>Author</th>
+            <th>Book's details</th>
             <th>Price</th>
-            <th>Stock</th>
-            <th>Actions</th>
+            <th></th>
         </tr>
         </thead>
         <tbody>
-        <!--/*@thymesVar id="books" type=""*/-->
         <tr th:each="book : ${books}">
-            <td th:text="${book.title}">Example Book</td>
-            <td th:text="${book.author}">Author Name</td>
-            <td th:text="${book.price}">$19.99</td>
-            <td th:text="${book.stockBook}">100</td>
+            <td><img th:src="@{${book.imageUrl}}" alt="Book Image" class="book-image"/></td>
+            <td th:text="${book.title}"></td>
             <td>
-                <button>Edit</button>
-                <button>Delete</button>
+                <a th:href="@{/bookDetails/{id}(id=${book.id})}">more details</a>
+            </td>
+            <td th:text="${book.price}"></td>
+            <td>
+                <button class="btn btn-primary" th:onclick="'Edit(' + ${book.id} + ')'">Edit book</button>
             </td>
         </tr>
         </tbody>
     </table>
+
     <div id="validationMessages">
         <p th:if="${priceValidationMessage}" th:text="${priceValidationMessage}" class="priceValidationMessage"></p>
         <p th:if="${stockValidationMessage}" th:text="${stockValidationMessage}" class="stockValidationMessage"></p>
@@ -57,8 +61,14 @@
 </div>
 
 
+<script th:inline="javascript">
+    // Handle search button click
+    document.getElementById('searchButton').addEventListener('click', function() {
+        const keyword = document.getElementById('searchField').value;
+        window.location.href = '/admin?keyword=' + encodeURIComponent(keyword);
+    });
 
+</script>
 
-<!-- Add your shopping content here -->
 </body>
 </html>
