@@ -7,14 +7,16 @@ import java.util.Objects;
 @Entity
 @Table
 public class Book {
-    @Id
+
     @SequenceGenerator(
             name = "book_sequence",
             sequenceName = "book_sequence",
             allocationSize = 1
     )
+
+    @Id
     @GeneratedValue(
-            strategy = GenerationType.SEQUENCE,
+            strategy = GenerationType.IDENTITY,
             generator = "book_sequence"
     )
     private Long id;
