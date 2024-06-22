@@ -37,6 +37,7 @@
             <th>Book's details</th>
             <th>Price</th>
             <th></th>
+            <th></th>
         </tr>
         </thead>
         <tbody>
@@ -49,6 +50,9 @@
             <td th:text="${book.price}"></td>
             <td>
                 <button class="btn btn-primary" th:onclick="'Edit(' + ${book.id} + ')'">Edit book</button>
+            </td>
+            <td>
+                <button class="btn btn-primary" th:onclick="'remove(' + ${book.id} + ')'">Remove Book</button>
             </td>
         </tr>
         </tbody>
@@ -96,19 +100,39 @@
 
 <script th:inline="javascript">
     // Handle search button click
-    document.getElementById('searchButton').addEventListener('click', function() {
+    document.getElementById('searchButton').addEventListener('click', function () {
         const keyword = document.getElementById('searchField').value;
         window.location.href = '/admin?keyword=' + encodeURIComponent(keyword);
     });
     // Show add book form
-    document.getElementById('addBookButton').addEventListener('click', function() {
+    document.getElementById('addBookButton').addEventListener('click', function () {
         document.getElementById('addBookForm').style.display = 'block';
     });
 
     // Cancel add book form
-    document.getElementById('cancelAddBook').addEventListener('click', function() {
+    document.getElementById('cancelAddBook').addEventListener('click', function () {
         document.getElementById('addBookForm').style.display = 'none';
     });
+
+    function remove(bookId) {
+        fetch(`/remove/${bookId}`, {
+            method: 'DELETE',
+            headers: {
+                'X-CSRF-TOKEN': [[${_csrf.token}]]
+            }
+        })
+            .then(response => {
+                if (response.ok) {
+                    console.log("Book removed successfully!");
+                    document.getElementById(`book-item-${bookId}`).remove();
+                } else {
+                    console.error("Error deleting book:", response.statusText);
+                }
+            })
+            .catch(error => {
+                console.error("Error deleting book:", error);
+            });
+    }
 </script>
 
 </body>

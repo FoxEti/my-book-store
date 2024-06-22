@@ -2,6 +2,8 @@ package com.example.bookstore.controller;
 
 import com.example.bookstore.models.Book;
 import com.example.bookstore.services.BookService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -40,4 +42,15 @@ public class BookController {
         bookService.addBook(newBook);
         return "redirect:/admin";
     }
+
+    @DeleteMapping("/remove/{id}")
+    public ResponseEntity<Void> deleteBook(@PathVariable Long id) {
+        try {
+            bookService.deleteBookById(id);
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
 }
