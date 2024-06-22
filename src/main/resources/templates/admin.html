@@ -41,7 +41,7 @@
         </tr>
         </thead>
         <tbody>
-        <tr th:each="book : ${books}">
+        <tr th:each="book : ${books}" th:id="'book-item-'+${book.id}">
             <td><img th:src="@{${book.imageUrl}}" alt="Book Image" class="book-image"/></td>
             <td th:text="${book.title}"></td>
             <td>
@@ -49,10 +49,10 @@
             </td>
             <td th:text="${book.price}"></td>
             <td>
-                <button class="btn btn-primary" th:onclick="'Edit(' + ${book.id} + ')'">Edit book</button>
+                <button class="btn btn-primary" th:onclick="'editBook(' + ${book.id} + ')'">Edit book</button>
             </td>
             <td>
-                <button class="btn btn-primary" th:onclick="'remove(' + ${book.id} + ')'">Remove Book</button>
+                <button class="btn btn-primary" th:onclick="'removeBook(' + ${book.id} + ')'">Remove Book</button>
             </td>
         </tr>
         </tbody>
@@ -91,12 +91,17 @@
         </form>
     </div>
 
+
+
     <div id="validationMessages">
         <p th:if="${priceValidationMessage}" th:text="${priceValidationMessage}" class="priceValidationMessage"></p>
         <p th:if="${stockValidationMessage}" th:text="${stockValidationMessage}" class="stockValidationMessage"></p>
     </div>
 </div>
 
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 
 <script th:inline="javascript">
     // Handle search button click
@@ -114,8 +119,8 @@
         document.getElementById('addBookForm').style.display = 'none';
     });
 
-    function remove(bookId) {
-        fetch(`/remove/${bookId}`, {
+    function removeBook(bookId) {
+        fetch(`/removeBook/${bookId}`, {
             method: 'DELETE',
             headers: {
                 'X-CSRF-TOKEN': [[${_csrf.token}]]
@@ -133,7 +138,9 @@
                 console.error("Error deleting book:", error);
             });
     }
+
 </script>
+
 
 </body>
 </html>

@@ -43,11 +43,34 @@ public class BookController {
         return "redirect:/admin";
     }
 
-    @DeleteMapping("/remove/{id}")
+    @DeleteMapping("/removeBook/{id}")
     public ResponseEntity<Void> deleteBook(@PathVariable Long id) {
         try {
             bookService.deleteBookById(id);
             return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    @PostMapping("/editBook/{id}")
+    public ResponseEntity<Void> editBook(@PathVariable Long id, @RequestBody Book updatedBook) {
+        try {
+            Book existingBook = bookService.getBookById(id);
+            if (existingBook != null) {
+                existingBook.setImageUrl(updatedBook.getImageUrl());
+                existingBook.setTitle(updatedBook.getTitle());
+                existingBook.setAuthor(updatedBook.getAuthor());
+                existingBook.setPrice(updatedBook.getPrice());
+                existingBook.setDetails(updatedBook.getDetails());
+                existingBook.setCategory(updatedBook.getCategory());
+                existingBook.setStockBook(updatedBook.getStockBook());
+                //existingBook.setStatus(updatedBook.getStatus());
+                bookService.saveEdits(existingBook);
+                return ResponseEntity.ok().build();
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            }
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
