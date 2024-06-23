@@ -49,7 +49,7 @@
             </td>
             <td th:text="${book.price}"></td>
             <td>
-                <button class="btn btn-primary" th:onclick="'editBook(' + ${book.id} + ')'">Edit book</button>
+                <button id="editButton" class="btn btn-primary" th:onclick="'editDetailsBook(' + ${book.id} + ')'">Edit book</button>
             </td>
             <td>
                 <button class="btn btn-primary" th:onclick="'removeBook(' + ${book.id} + ')'">Remove Book</button>
@@ -92,12 +92,12 @@
 
     </div>
 
-    <!-- Add this form below the existing content in the container-book-table div -->
-    <div id="editBook" style="display:none;">
-        <h2>Add New Book</h2>
+
+    <div id="editBookForm" style="display:none;">
+        <h2>Edit Book</h2>
         <form th:action="@{/admin/editBook}" method="post">
             <label for="imageUrl">Image URL:</label>
-            <input type="text" id="editImageUrl" name="imageUrl" placeholder="Enter Image URL" required /><br/>
+            <input type="text" id="editImageUrl" name="imageUrl" required /><br/>
 
             <label for="title">Title:</label>
             <input type="text" id="editTitle" name="title" required /><br/>
@@ -120,7 +120,7 @@
             <label for="status">Status:</label>
             <input type="text" id="editStatus" name="status" required /><br/>
 
-            <button type="submit">Add Book</button>
+            <button type="submit">Save</button>
             <button type="button" id="editCancelAddBook">Cancel</button>
         </form>
     </div>
@@ -132,11 +132,42 @@
     </div>
 </div>
 
-<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 
-<script th:inline="javascript">
+<script th:inline="javascript" >
+
+    function editDetailsBook(bookId) {
+        fetch(`/editDetailsBook/${bookId}`, {
+            method: 'GET',
+            headers: {
+                'X-CSRF-TOKEN': [[${_csrf.token}]]
+            }
+        })
+            .then(response => {
+                if (response.ok) {
+                    return response.json(); // Parse the JSON response
+                } else {
+                    console.error("Error edit book:", response.statusText);
+                }
+            })
+            .then(data => {
+                // Populate form fields with the fetched data
+                document.getElementById('editImageUrl').value = data.imageUrl;
+                document.getElementById('editTitle').value = data.title;
+                document.getElementById('editAuthor').value = data.author;
+                document.getElementById('editPrice').value = data.price;
+                document.getElementById('editDetailsBook').value = data.detailsBook;
+                document.getElementById('editCategory').value = data.category;
+                document.getElementById('editStockBook').value = data.stockBook;
+                document.getElementById('editStatus').value = data.status;
+
+                // Display the edit form
+                document.getElementById('editBookForm').style.display = 'block';
+            })
+            .catch(error => {
+                console.error("Error edit book:", error);
+            });
+    }
+
     // Handle search button click
     document.getElementById('searchButton').addEventListener('click', function () {
         const keyword = document.getElementById('searchField').value;
@@ -151,6 +182,8 @@
     document.getElementById('cancelAddBook').addEventListener('click', function () {
         document.getElementById('addBookForm').style.display = 'none';
     });
+
+
 
     function removeBook(bookId) {
         fetch(`/removeBook/${bookId}`, {
@@ -171,6 +204,7 @@
                 console.error("Error deleting book:", error);
             });
     }
+
 
 </script>
 

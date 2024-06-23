@@ -53,27 +53,16 @@ public class BookController {
         }
     }
 
-    @PostMapping("/editBook/{id}")
-    public ResponseEntity<Void> editBook(@PathVariable Long id, @RequestBody Book updatedBook) {
+    @GetMapping("/editDetailsBook/{bookId}")
+    @ResponseBody
+    public ResponseEntity<Book> getBookDetails(@PathVariable Long bookId) {
         try {
-            Book existingBook = bookService.getBookById(id);
-            if (existingBook != null) {
-                existingBook.setImageUrl(updatedBook.getImageUrl());
-                existingBook.setTitle(updatedBook.getTitle());
-                existingBook.setAuthor(updatedBook.getAuthor());
-                existingBook.setPrice(updatedBook.getPrice());
-                existingBook.setDetails(updatedBook.getDetails());
-                existingBook.setCategory(updatedBook.getCategory());
-                existingBook.setStockBook(updatedBook.getStockBook());
-                //existingBook.setStatus(updatedBook.getStatus());
-                bookService.saveEdits(existingBook);
-                return ResponseEntity.ok().build();
-            } else {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-            }
+            Book book = bookService.getBookById(bookId);
+            return ResponseEntity.ok(book);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
+
 
 }
