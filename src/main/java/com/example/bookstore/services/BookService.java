@@ -1,14 +1,10 @@
 package com.example.bookstore.services;
 
-
 import com.example.bookstore.models.Book;
 import com.example.bookstore.repository.BookRepository;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
-import jakarta.transaction.Transactional;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class BookService {
@@ -40,6 +36,20 @@ public class BookService {
     }
 
     public void saveEdits(Book book) {
-        bookRepository.save(book);
+        Optional<Book> existingBook = bookRepository.findById(book.getId()); // Find book by ID
+        if (existingBook.isPresent()) {
+            existingBook.get().setImageUrl(book.getImageUrl());  // Update properties
+            existingBook.get().setTitle(book.getTitle());
+            existingBook.get().setAuthor(book.getAuthor());
+            existingBook.get().setStockBook(book.getStockBook());
+            existingBook.get().setPrice(book.getPrice());
+            existingBook.get().setDetails(book.getDetails());
+            existingBook.get().setCategory(book.getCategory());
+            existingBook.get().setStatus();
+
+            bookRepository.save(existingBook.get());
+        } else {
+            System.out.println("error update a details of book" + book.getTitle());
+        }
     }
 }

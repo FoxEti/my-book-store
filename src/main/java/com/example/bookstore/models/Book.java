@@ -68,6 +68,17 @@ public class Book {
         this.status = stockBook > 0;
     }
 
+    public Book(String imageUrl, String title, String author, Double price, String detailsBook, String category, Integer stockBook, boolean status) {
+        this.imageUrl = imageUrl;
+        this.title = title;
+        this.author = author;
+        this.price = price;
+        this.details = detailsBook;
+        this.category = category;
+        this.stockBook = stockBook;
+        this.status = status;
+    }
+
 
     public String getTitle() {
         return title;

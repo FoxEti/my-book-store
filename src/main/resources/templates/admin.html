@@ -61,7 +61,7 @@
     <!-- Add this form below the existing content in the container-book-table div -->
     <div id="addBookForm" style="display:none;">
         <h2>Add New Book</h2>
-        <form th:action="@{/admin/addBook}" method="post">
+        <form th:action="@{/admin/book}" method="post">
             <label for="imageUrl">Image URL:</label>
             <input type="text" id="imageUrl" name="imageUrl" placeholder="Enter Image URL" required /><br/>
 
@@ -89,13 +89,11 @@
             <button type="submit">Add Book</button>
             <button type="button" id="cancelAddBook">Cancel</button>
         </form>
-
     </div>
-
 
     <div id="editBookForm" style="display:none;">
         <h2>Edit Book</h2>
-        <form th:action="@{/admin/editBook}" method="post">
+        <form th:action="@{/admin/editBook}" method="post" >
             <label for="imageUrl">Image URL:</label>
             <input type="text" id="editImageUrl" name="imageUrl" required /><br/>
 
@@ -117,7 +115,7 @@
             <label for="stockBook">Stock:</label>
             <input type="number" id="editStockBook" name="stockBook" required /><br/>
 
-            <label for="status">Status:</label>
+            <label for="stockBook">Stock:</label>
             <input type="text" id="editStatus" name="status" required /><br/>
 
             <button type="submit">Save</button>
@@ -125,16 +123,13 @@
         </form>
     </div>
 
-
     <div id="validationMessages">
         <p th:if="${priceValidationMessage}" th:text="${priceValidationMessage}" class="priceValidationMessage"></p>
         <p th:if="${stockValidationMessage}" th:text="${stockValidationMessage}" class="stockValidationMessage"></p>
     </div>
 </div>
 
-
 <script th:inline="javascript" >
-
     function editDetailsBook(bookId) {
         fetch(`/editDetailsBook/${bookId}`, {
             method: 'GET',
@@ -159,7 +154,6 @@
                 document.getElementById('editCategory').value = data.category;
                 document.getElementById('editStockBook').value = data.stockBook;
                 document.getElementById('editStatus').value = data.status;
-
                 // Display the edit form
                 document.getElementById('editBookForm').style.display = 'block';
             })
@@ -167,7 +161,9 @@
                 console.error("Error edit book:", error);
             });
     }
-
+    document.getElementById('editCancelAddBook').addEventListener('click', function () {
+        document.getElementById('editBookForm').style.display = 'none';
+    });
     // Handle search button click
     document.getElementById('searchButton').addEventListener('click', function () {
         const keyword = document.getElementById('searchField').value;
@@ -182,8 +178,6 @@
     document.getElementById('cancelAddBook').addEventListener('click', function () {
         document.getElementById('addBookForm').style.display = 'none';
     });
-
-
 
     function removeBook(bookId) {
         fetch(`/removeBook/${bookId}`, {
@@ -205,9 +199,7 @@
             });
     }
 
-
 </script>
-
 
 </body>
 </html>
