@@ -28,7 +28,7 @@ public class Book {
     private String imageUrl;
     private String category;
     private Integer stockBook;
-    private boolean status;
+
 
     public Book(Long id, String imageUrl, String title, String author, Double price, String detailsBook, String category, Integer stockBook) {
         this.id = id;
@@ -39,7 +39,6 @@ public class Book {
         this.details = detailsBook;
         this.category = category;
         this.stockBook = stockBook;
-        this.status = stockBook > 0;
     }
 
 
@@ -65,19 +64,9 @@ public class Book {
         this.details = detailsBook;
         this.category = category;
         this.stockBook = stockBook;
-        this.status = stockBook > 0;
     }
 
-    public Book(String imageUrl, String title, String author, Double price, String detailsBook, String category, Integer stockBook, boolean status) {
-        this.imageUrl = imageUrl;
-        this.title = title;
-        this.author = author;
-        this.price = price;
-        this.details = detailsBook;
-        this.category = category;
-        this.stockBook = stockBook;
-        this.status = status;
-    }
+
 
 
     public String getTitle() {
@@ -146,13 +135,6 @@ public class Book {
         return stockBook;
     }
 
-    public void setStatus() {
-        this.status = stockBook >= 0;
-    }
-
-    public boolean getStatus() {
-        return status;
-    }
 
     @Override
     public boolean equals(Object o) {
@@ -166,8 +148,7 @@ public class Book {
                 Objects.equals(details, book.details) &&
                 Objects.equals(imageUrl, book.imageUrl) &&
                 Objects.equals(category, book.category) &&
-                Objects.equals(stockBook, book.stockBook) &&
-                Objects.equals(status, book.status);
+                Objects.equals(stockBook, book.stockBook) ;
     }
 
     @Override
@@ -180,7 +161,6 @@ public class Book {
         result = 31 * result + (imageUrl != null ? imageUrl.hashCode() : 0);
         result = 31 * result + (category != null ? category.hashCode() : 0);
         result = 31 * result + (stockBook != null ? stockBook.hashCode() : 0);
-        result = 31 * result + (status ? 1 : 0);
         return result;
     }
 
@@ -194,7 +174,6 @@ public class Book {
                 ", imageUrl='" + imageUrl + '\'' +
                 ", category='" + category + '\'' +
                 ", stockBook=" + stockBook +
-                ", status='" + status + '\'' +
                 '}';
         return sb;
     }

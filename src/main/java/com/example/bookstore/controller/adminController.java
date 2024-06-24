@@ -26,4 +26,10 @@ public class adminController {
         model.addAttribute("books", books);
         return "admin";
     }
+
+    @PostMapping("/admin/editBook/{id}")
+    public String editBook(@PathVariable Long id, @ModelAttribute Book book) {
+        bookService.updateBook(id, book);
+        return "redirect:/admin";
+    }
 }

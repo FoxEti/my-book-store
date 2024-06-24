@@ -46,7 +46,7 @@
             </td>
             <td th:text="${book.price}"></td>
             <td>
-                <button class="btn btn-primary" th:data-status="${book.status}" th:onclick="'addToCart(' + ${book.id} + ', ' + ${book.status} + ')'">Add to Cart</button>
+                <button class="btn btn-primary"  th:onclick="'addToCart(' + ${book.id} + ')'">Add to Cart</button>
             </td>
 
         </tr>
@@ -56,11 +56,8 @@
 
 <script th:inline="javascript">
 
-    function addToCart(bookId, status) {
-        if (!status) {
-            alert('This book is not available for purchase.');
-            return;
-        }
+    function addToCart(bookId) {
+
 
         fetch('/add-to-cart', {
             method: 'POST',

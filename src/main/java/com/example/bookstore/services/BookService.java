@@ -35,21 +35,15 @@ public class BookService {
         bookRepository.deleteById(id);
     }
 
-    public void saveEdits(Book book) {
-        Optional<Book> existingBook = bookRepository.findById(book.getId()); // Find book by ID
-        if (existingBook.isPresent()) {
-            existingBook.get().setImageUrl(book.getImageUrl());  // Update properties
-            existingBook.get().setTitle(book.getTitle());
-            existingBook.get().setAuthor(book.getAuthor());
-            existingBook.get().setStockBook(book.getStockBook());
-            existingBook.get().setPrice(book.getPrice());
-            existingBook.get().setDetails(book.getDetails());
-            existingBook.get().setCategory(book.getCategory());
-            existingBook.get().setStatus();
-
-            bookRepository.save(existingBook.get());
-        } else {
-            System.out.println("error update a details of book" + book.getTitle());
-        }
+    public void updateBook(Long id, Book book) {
+        Book existingBook = bookRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid book Id:" + id));
+        existingBook.setImageUrl(book.getImageUrl());
+        existingBook.setTitle(book.getTitle());
+        existingBook.setAuthor(book.getAuthor());
+        existingBook.setPrice(book.getPrice());
+        existingBook.setDetails(book.getDetails());
+        existingBook.setCategory(book.getCategory());
+        existingBook.setStockBook(book.getStockBook());
+        bookRepository.save(existingBook);
     }
 }
