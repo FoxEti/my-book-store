@@ -12,3 +12,8 @@ INSERT INTO book (image_url, title, author, price, details, category, stock_book
 VALUES ('/images/45600035892.jpg', 'Book Title 6', 'Author 6', 8.99, 'Details about Book 6', 'Category 6', 1);
 
 
+INSERT INTO users (id,email, "password", "role", user_name)
+VALUES (1,'etifox9@gmail.com', 'falafel', 'ADMIN', 'eti fox');
+
+
+

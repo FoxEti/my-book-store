@@ -9,9 +9,34 @@
     <ul>
         <li><a th:href="@{/home}">Home</a></li>
         <li><a th:href="@{/shopping}">Shopping</a></li>
-        <li><a th:href="@{/login}">Login</a></li>
-        <li><a th:href="@{/register}">Register</a></li>
-        <li class="nav-user">
+
+        <!-- Conditional rendering based on user authentication -->
+        <li th:if="${#authorization.expression('isAuthenticated() and !hasRole(''ADMIN'')')}">
+            <a th:href="@{/cart}">Cart</a>
+        </li>
+
+        <li th:if="${#authorization.expression('isAuthenticated() and hasRole(''ADMIN'')')}">
+            <a th:href="@{/admin}">Admin</a>
+        </li>
+
+
+        <li th:if="${#authorization.expression('!isAuthenticated()')}">
+            <a th:href="@{/login}">Login</a>
+        </li>
+
+        <li th:if="${#authorization.expression('!isAuthenticated()')}">
+            <a th:href="@{/register}">Register</a>
+        </li>
+
+        <!-- Logout form -->
+        <li th:if="${#authorization.expression('isAuthenticated()')}">
+            <form th:action="@{/logout}" method="post">
+                <input type="submit" value="Sign Out"/>
+            </form>
+        </li>
+
+        <!-- Display username if authenticated -->
+        <li class="nav-user" th:if="${#authorization.expression('isAuthenticated()')}">
             <span class="username-circle" th:text="${#authentication.name}"></span>
         </li>
     </ul>

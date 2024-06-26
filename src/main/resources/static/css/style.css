@@ -285,3 +285,11 @@ input[type="submit"]:hover {
     display: flex;
     justify-content: space-between;
 }
+
+.cart-visible {
+    display: block; /* Make the button visible */
+}
+
+.cart-hidden {
+    display: none; /* Hide the button visually */
+}

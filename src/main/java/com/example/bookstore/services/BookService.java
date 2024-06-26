@@ -24,7 +24,7 @@ public class BookService {
     }
 
     public List<Book> searchBooks(String keyword) {
-        return bookRepository.findByTitleContainingOrAuthorContainingOrCategoryContaining(keyword, keyword, keyword);
+        return bookRepository.findByTitleContainingOrAuthorContainingOrCategoryContaining( keyword, keyword,keyword);
     }
 
     public void addBook(Book book) {
