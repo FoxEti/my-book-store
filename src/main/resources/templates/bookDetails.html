@@ -10,16 +10,50 @@
     <ul>
         <li><a th:href="@{/home}">Home</a></li>
         <li><a th:href="@{/shopping}">Shopping</a></li>
-        <li><a th:href="@{/cart}">Cart</a></li>
-        <li><a th:href="@{/admin}">Admin</a></li>
-        <li><form th:action="@{/logout}" method="post">
-            <input type="submit" value="Sign Out"/>
-        </form></li>
-        <li class="nav-user">
+
+        <!-- Conditional rendering based on user authentication -->
+        <li th:if="${#authorization.expression('isAuthenticated() and !hasRole(''ADMIN'')')}">
+            <a th:href="@{/cart}">Cart</a>
+        </li>
+
+        <li th:if="${#authorization.expression('isAuthenticated() and hasRole(''ADMIN'')')}">
+            <a th:href="@{/admin}">Admin</a>
+        </li>
+
+
+        <li th:if="${#authorization.expression('!isAuthenticated()')}">
+            <a th:href="@{/login}">Login</a>
+        </li>
+
+        <li th:if="${#authorization.expression('!isAuthenticated()')}">
+            <a th:href="@{/register}">Register</a>
+        </li>
+
+        <!-- Logout form -->
+        <li th:if="${#authorization.expression('isAuthenticated()')}">
+            <form th:action="@{/logout}" method="post">
+                <input type="submit" value="Sign Out"/>
+            </form>
+        </li>
+
+        <!-- Display username if authenticated -->
+        <li class="nav-user" th:if="${#authorization.expression('isAuthenticated()')}">
             <span class="username-circle" th:text="${#authentication.name}"></span>
         </li>
     </ul>
 </nav>
+
+<h1>Book Details</h1>
+
+<div class="book-details">
+    <img th:src="@{${book.imageUrl}}" alt="Book Image" class="book-image"/>
+    <h2 th:text="${book.title}"></h2>
+    <p><strong>Price:</strong> <span th:text="${book.price}"></span></p>
+    <p><strong>Author:</strong> <span th:text="${book.author}"></span></p>
+    <p><strong>Category:</strong> <span th:text="${book.category}"></span></p>
+    <p><strong>Description:</strong> <span th:text="${book.details}"></span></p>
+
+</div>
 
 </body>
 </html>

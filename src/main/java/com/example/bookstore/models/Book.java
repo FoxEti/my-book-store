@@ -7,14 +7,16 @@ import java.util.Objects;
 @Entity
 @Table
 public class Book {
-    @Id
+
     @SequenceGenerator(
             name = "book_sequence",
             sequenceName = "book_sequence",
             allocationSize = 1
     )
+
+    @Id
     @GeneratedValue(
-            strategy = GenerationType.SEQUENCE,
+            strategy = GenerationType.IDENTITY,
             generator = "book_sequence"
     )
     private Long id;
@@ -26,9 +28,9 @@ public class Book {
     private String imageUrl;
     private String category;
     private Integer stockBook;
-    private String status;
 
-    public Book(Long id, String imageUrl, String title, String author, Double price, String detailsBook, String category, Integer stockBook, String status) {
+
+    public Book(Long id, String imageUrl, String title, String author, Double price, String detailsBook, String category, Integer stockBook) {
         this.id = id;
         this.imageUrl = imageUrl;
         this.title = title;
@@ -37,7 +39,6 @@ public class Book {
         this.details = detailsBook;
         this.category = category;
         this.stockBook = stockBook;
-        this.status = status;
     }
 
 
@@ -55,7 +56,7 @@ public class Book {
         this.id = id;
     }
 
-    public Book(String imageUrl, String title, String author, Double price, String detailsBook, String category, Integer stockBook, String status) {
+    public Book(String imageUrl, String title, String author, Double price, String detailsBook, String category, Integer stockBook) {
         this.imageUrl = imageUrl;
         this.title = title;
         this.author = author;
@@ -63,8 +64,10 @@ public class Book {
         this.details = detailsBook;
         this.category = category;
         this.stockBook = stockBook;
-        this.status = status;
     }
+
+
+
 
     public String getTitle() {
         return title;
@@ -132,18 +135,6 @@ public class Book {
         return stockBook;
     }
 
-    public void setStatus() {
-        if(stockBook!=0) {
-            this.status = "Available";
-        }
-        else {
-            this.status = "Not Available";
-        }
-    }
-
-    public String getStatus() {
-        return status;
-    }
 
     @Override
     public boolean equals(Object o) {
@@ -157,8 +148,7 @@ public class Book {
                 Objects.equals(details, book.details) &&
                 Objects.equals(imageUrl, book.imageUrl) &&
                 Objects.equals(category, book.category) &&
-                Objects.equals(stockBook, book.stockBook) &&
-                Objects.equals(status, book.status);
+                Objects.equals(stockBook, book.stockBook) ;
     }
 
     @Override
@@ -171,24 +161,21 @@ public class Book {
         result = 31 * result + (imageUrl != null ? imageUrl.hashCode() : 0);
         result = 31 * result + (category != null ? category.hashCode() : 0);
         result = 31 * result + (stockBook != null ? stockBook.hashCode() : 0);
-        result = 31 * result + (status != null ? status.hashCode() : 0);
         return result;
     }
 
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder("Book{");
-        sb.append("id=").append(id);
-        sb.append(", title='").append(title).append('\'');
-        sb.append(", author='").append(author).append('\'');
-        sb.append(", price=").append(price);
-        sb.append(", details='").append(details).append('\'');
-        sb.append(", imageUrl='").append(imageUrl).append('\'');
-        sb.append(", category='").append(category).append('\'');
-        sb.append(", stockBook=").append(stockBook);
-        sb.append(", status='").append(status).append('\'');
-        sb.append('}');
-        return sb.toString();
+        String sb = "Book{" + "id=" + id +
+                ", title='" + title + '\'' +
+                ", author='" + author + '\'' +
+                ", price=" + price +
+                ", details='" + details + '\'' +
+                ", imageUrl='" + imageUrl + '\'' +
+                ", category='" + category + '\'' +
+                ", stockBook=" + stockBook +
+                '}';
+        return sb;
     }
 
 

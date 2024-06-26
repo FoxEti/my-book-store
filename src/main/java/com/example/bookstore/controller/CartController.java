@@ -10,13 +10,11 @@ import com.example.bookstore.services.UsersService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.List;
@@ -30,16 +28,15 @@ public class CartController {
 
     private final CartItemService cartItemService;
     private final UsersService userService;
-    private final CartService cartService;
     private final BookController bookService;
+    private final CartService cartService;
 
-    public CartController(CartItemService cartItemService, UsersService userService, CartService cartService, BookController bookService) {
+    public CartController(CartItemService cartItemService, UsersService userService, CartService cartService, BookController bookService, CartService cartService1) {
         this.cartItemService = cartItemService;
         this.userService = userService;
-        this.cartService = cartService;
         this.bookService = bookService;
+        this.cartService = cartService1;
     }
-
 
     @GetMapping("/cart")
     public String cartPage(Model model) {
@@ -79,6 +76,23 @@ public class CartController {
         }
         cartItemService.addOrUpdateCartItem(currentUser, bookId, 1);
         return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/delete-from-cart")
+    public ResponseEntity<?> deleteFromCart(@RequestBody Map<String, Long> payload) {
+        Long cartItemId = payload.get("cartItemId");
+        Users currentUser = userService.getCurrentUser();
+        if (currentUser == null) {
+            return ResponseEntity.badRequest().body("User not logged in...");
+        }
+
+        try {
+            cartItemService.deleteCartItem(cartItemId);
+            return ResponseEntity.ok().build(); // Successful deletion
+        } catch (Exception e) {
+            logger.error("Error deleting cart item: " + e.getMessage());
+            return ResponseEntity.badRequest().body("Error deleting cart item.");
+        }
     }
 
 

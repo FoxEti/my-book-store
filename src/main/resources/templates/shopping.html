@@ -3,32 +3,63 @@
       xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
 <head>
     <title>Shopping</title>
-    <link rel="stylesheet" th:href="@{/css/style.css}" />
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
 </head>
 <body>
 <nav class="nav-bar">
     <ul>
         <li><a th:href="@{/home}">Home</a></li>
         <li><a th:href="@{/shopping}">Shopping</a></li>
-        <li><a th:href="@{/cart}">Cart</a></li>
-        <li><a th:href="@{/admin}">Admin</a></li>
-        <li><form th:action="@{/logout}" method="post">
-            <input type="submit" value="Sign Out"/>
-        </form></li>
-        <li class="nav-user">
+
+        <!-- Conditional rendering based on user authentication -->
+        <li th:if="${#authorization.expression('isAuthenticated() and !hasRole(''ADMIN'')')}">
+            <a th:href="@{/cart}">Cart</a>
+        </li>
+
+        <li th:if="${#authorization.expression('isAuthenticated() and hasRole(''ADMIN'')')}">
+            <a th:href="@{/admin}">Admin</a>
+        </li>
+
+
+        <li th:if="${#authorization.expression('!isAuthenticated()')}">
+            <a th:href="@{/login}">Login</a>
+        </li>
+
+        <li th:if="${#authorization.expression('!isAuthenticated()')}">
+            <a th:href="@{/register}">Register</a>
+        </li>
+
+        <!-- Logout form -->
+        <li th:if="${#authorization.expression('isAuthenticated()')}">
+            <form th:action="@{/logout}" method="post">
+                <input type="submit" value="Sign Out"/>
+            </form>
+        </li>
+
+        <!-- Display username if authenticated -->
+        <li class="nav-user" th:if="${#authorization.expression('isAuthenticated()')}">
             <span class="username-circle" th:text="${#authentication.name}"></span>
         </li>
     </ul>
 </nav>
-<h1>Welcome to the Shopping Page!</h1>
+
+<h1>Let's start shopping!</h1>
 <div class="container-book-table">
     <h1>Book Store</h1>
+
+    <div class="actions-search-field">
+        <input type="text" id="searchField" placeholder="Search by book name, author or category" style="width: 30%;"/>
+        <input type="number" id="minPrice" placeholder="Min Price" style="width: 10%;"/>
+        <input type="number" id="maxPrice" placeholder="Max Price" style="width: 10%;"/>
+        <button id="searchButton">Search</button>
+    </div>
+
     <table class="book-table">
         <thead>
         <tr>
             <th>Book</th>
             <th>Title</th>
-            <th>Author</th>
+            <th>Book's details</th>
             <th>Price</th>
             <th>Add to Cart</th>
         </tr>
@@ -37,38 +68,75 @@
         <tr th:each="book : ${books}">
             <td><img th:src="@{${book.imageUrl}}" alt="Book Image" class="book-image"/></td>
             <td th:text="${book.title}"></td>
-            <td th:text="${book.author}"></td>
+            <td>
+                <a th:href="@{/bookDetails/{id}(id=${book.id})}">more details</a>
+            </td>
             <td th:text="${book.price}"></td>
             <td>
-                <button class="btn btn-primary" th:onclick="'addToCart(' + ${book.id} + ')'">Add to Cart</button>
+                <button class="btn btn-primary" th:onclick="'addToCart(' + ${book.id} + ')'">Add to
+                    Cart
+                </button>
             </td>
+
         </tr>
         </tbody>
     </table>
 </div>
 
 <script th:inline="javascript">
+
     function addToCart(bookId) {
-        fetch('/add-to-cart', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': [[${_csrf.token}]]
-            },
-            body: JSON.stringify({ bookId: bookId })
-        })
-            .then(response => {
-                if (response.ok) {
-                    alert('Book added to cart successfully!');
-                } else {
-                    alert('Failed to add book to cart.');
-                }
+        const isAuthenticated = /*[(${#authorization.expression('isAuthenticated()')})]*/ false;
+        if (isAuthenticated) {
+            fetch('/add-to-cart', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': [[${_csrf.token}]]
+                },
+                body: JSON.stringify({bookId: bookId})
             })
-            .catch(error => {
-                console.error('Error adding book to cart:', error);
-                alert('An error occurred while adding the book to the cart.');
-            });
+                .then(response => {
+                    if (response.ok) {
+                        alert('Book added to cart successfully!');
+                    } else {
+                        alert('Failed to add book to cart.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error adding book to cart:', error);
+                    alert('An error occurred while adding the book to the cart.');
+                });
+        } else {
+            // User is not authenticated
+            alert('You are not logged in. Please login to add items to your cart.');
+        }
+
     }
+
+    document.getElementById('searchButton').addEventListener('click', function () {
+        const keyword = document.getElementById('searchField').value;
+        const minPrice = document.getElementById('minPrice').value;
+        const maxPrice = document.getElementById('maxPrice').value;
+
+        let url = '/shopping?';
+
+        if (keyword) {
+            url += 'keyword=' + encodeURIComponent(keyword) + '&';
+        }
+
+        if (minPrice) {
+            url += 'minPrice=' + encodeURIComponent(minPrice) + '&';
+        }
+
+        if (maxPrice) {
+            url += 'maxPrice=' + encodeURIComponent(maxPrice) + '&';
+        }
+
+        window.location.href = url.slice(0, -1); // Remove trailing '&'
+    });
+
 </script>
+
 </body>
 </html>

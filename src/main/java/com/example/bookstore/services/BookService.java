@@ -1,14 +1,10 @@
 package com.example.bookstore.services;
 
-
 import com.example.bookstore.models.Book;
 import com.example.bookstore.repository.BookRepository;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
-import jakarta.transaction.Transactional;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class BookService {
@@ -19,24 +15,6 @@ public class BookService {
         this.bookRepository = bookRepository;
     }
 
-    @Transactional
-    public void addNewBook(Book book) {
-        bookRepository.save(book);
-        System.out.println(book);
-    }
-
-    public List<Book> searchBooks(String keyword) {
-        return bookRepository.searchByTitleOrAuthor("%" + keyword.toLowerCase() + "%");
-    }
-
-    public void updateBook(Book updatedBook) {
-        bookRepository.save(updatedBook);
-    }
-
-    public void deleteBook(Book book) {
-        bookRepository.delete(book);
-    }
-
     public Book getBookById(Long bookId) {
         return bookRepository.findBookById(bookId);
     }
@@ -45,5 +23,35 @@ public class BookService {
         return bookRepository.findAll();
     }
 
+    public List<Book> searchBooks(String keyword, Double minPrice, Double maxPrice) {
+        if (keyword != null && !keyword.isEmpty()) {
+            return bookRepository.findByTitleContainingOrAuthorContainingOrCategoryContaining(keyword, keyword, keyword);
+        } else if (minPrice != null && maxPrice != null) {
+            return bookRepository.findByPriceBetween(minPrice, maxPrice);
+        } else {
+            return bookRepository.findAll();
+        }
+    }
 
+
+
+    public void addBook(Book book) {
+        bookRepository.save(book);
+    }
+
+    public void deleteBookById(Long id) {
+        bookRepository.deleteById(id);
+    }
+
+    public void updateBook(Long id, Book book) {
+        Book existingBook = bookRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid book Id:" + id));
+        existingBook.setImageUrl(book.getImageUrl());
+        existingBook.setTitle(book.getTitle());
+        existingBook.setAuthor(book.getAuthor());
+        existingBook.setPrice(book.getPrice());
+        existingBook.setDetails(book.getDetails());
+        existingBook.setCategory(book.getCategory());
+        existingBook.setStockBook(book.getStockBook());
+        bookRepository.save(existingBook);
+    }
 }
