@@ -37,17 +37,17 @@ public class BookController {
             @RequestParam String imageUrl,
             @RequestParam String title,
             @RequestParam String author,
-            @RequestParam String price,
+            @RequestParam Double price,
             @RequestParam String detailsBook,
             @RequestParam String category,
             @RequestParam Integer stockBook
     ) {
         if (id <= 0) {
             // Create a new book object and save it to the database
-            Book newBook = new Book(imageUrl, title, author, Double.parseDouble(price), detailsBook, category, stockBook);
+            Book newBook = new Book(imageUrl, title, author, price, detailsBook, category, stockBook);
             bookService.addBook(newBook);
         } else {
-            Book existingBook = new Book(id, imageUrl, title, author, Double.parseDouble(price), detailsBook, category, stockBook);
+            Book existingBook = new Book(id, imageUrl, title, author, price, detailsBook, category, stockBook);
             bookService.updateBook(id, existingBook);
         }
         return "redirect:/admin";

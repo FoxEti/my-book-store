@@ -86,7 +86,8 @@
     <!-- Add this form below the existing content in the container-book-table div -->
     <div id="addBookForm" style="display:none;">
         <h2>Add New Book</h2>
-        <form th:action="@{/admin/book}" method="post">
+        <form th:action="@{/admin/book}" method="post" >
+            <input type="hidden" id="id" name="id" value="0" />
             <label for="imageUrl">Image URL:</label>
             <input type="text" id="imageUrl" name="imageUrl" placeholder="Enter Image URL" required /><br/>
 
@@ -97,7 +98,7 @@
             <input type="text" id="author" name="author" placeholder="Enter Author" required /><br/>
 
             <label for="price">Price:</label>
-            <input type="text" id="price" name="price" placeholder="Enter Price" required /><br/>
+            <input type="number" step="0.01" id="price" name="price"  placeholder="Enter Price" required /><br/>
 
             <label for="detailsBook">Details:</label>
             <input type="text" id="detailsBook" name="detailsBook" placeholder="Enter Details" required /><br/>
@@ -115,7 +116,7 @@
 
     <div id="editBookForm" style="display:none;">
         <h2>Edit Book</h2>
-        <form th:action="@{/admin/book}" method="post">
+        <form th:action="@{/admin/book}" method="post" >
             <input type="hidden" id="hdnBookId" name="id" />
             <label for="imageUrl">Image URL:</label>
             <input type="text" id="txtEditImageUrl" name="imageUrl" required /><br/>
@@ -127,7 +128,7 @@
             <input type="text" id="txtEditAuthor" name="author" required /><br/>
 
             <label for="price">Price:</label>
-            <input type="text" id="txtEditPrice" name="price" required /><br/>
+            <input type="number" step="0.01" id="txtEditPrice" name="price"  placeholder="Enter Price" required /><br/>
 
             <label for="detailsBook">Details:</label>
             <input type="text" id="txtEditDetailsBook" name="detailsBook" required /><br/>
@@ -143,10 +144,6 @@
         </form>
     </div>
 
-    <div id="validationMessages">
-        <p th:if="${priceValidationMessage}" th:text="${priceValidationMessage}" class="priceValidationMessage"></p>
-        <p th:if="${stockValidationMessage}" th:text="${stockValidationMessage}" class="stockValidationMessage"></p>
-    </div>
 </div>
 
 <script th:inline="javascript" >
@@ -236,6 +233,8 @@
 
         window.location.href = url.slice(0, -1); // Remove trailing '&'
     });
+
+
 </script>
 
 </body>
