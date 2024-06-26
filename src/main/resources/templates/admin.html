@@ -47,7 +47,9 @@
     <h1>Edit Shopping List</h1>
 
     <div class="actions-search-field">
-        <input type="text" id="searchField" placeholder="Search by book name, author or category" style="width: 50%;" />
+        <input type="text" id="searchField" placeholder="Search by book name, author or category" style="width: 30%;"/>
+        <input type="number" id="minPrice" placeholder="Min Price" style="width: 10%;"/>
+        <input type="number" id="maxPrice" placeholder="Max Price" style="width: 10%;"/>
         <button id="searchButton">Search</button>
         <button id="addBookButton" type="button">Add new Book</button>
     </div>
@@ -182,11 +184,7 @@
     document.getElementById('editCancelAddBook').addEventListener('click', function () {
         document.getElementById('editBookForm').style.display = 'none';
     });
-    // Handle search button click
-    document.getElementById('searchButton').addEventListener('click', function () {
-        const keyword = document.getElementById('searchField').value;
-        window.location.href = '/admin?keyword=' + encodeURIComponent(keyword);
-    });
+
     // Show add book form
     document.getElementById('addBookButton').addEventListener('click', function () {
         document.getElementById('addBookForm').style.display = 'block';
@@ -216,6 +214,28 @@
                 console.error("Error deleting book:", error);
             });
     }
+
+    document.getElementById('searchButton').addEventListener('click', function () {
+        const keyword = document.getElementById('searchField').value;
+        const minPrice = document.getElementById('minPrice').value;
+        const maxPrice = document.getElementById('maxPrice').value;
+
+        let url = '/admin?';
+
+        if (keyword) {
+            url += 'keyword=' + encodeURIComponent(keyword) + '&';
+        }
+
+        if (minPrice) {
+            url += 'minPrice=' + encodeURIComponent(minPrice) + '&';
+        }
+
+        if (maxPrice) {
+            url += 'maxPrice=' + encodeURIComponent(maxPrice) + '&';
+        }
+
+        window.location.href = url.slice(0, -1); // Remove trailing '&'
+    });
 </script>
 
 </body>

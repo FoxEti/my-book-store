@@ -16,10 +16,13 @@ public class adminController {
     }
 
     @GetMapping("/admin")
-    public String adminPage(Model model, @RequestParam(value = "keyword", required = false) String keyword) {
+    public String adminPage(Model model,
+                            @RequestParam(value = "keyword", required = false) String keyword,
+                            @RequestParam(value = "minPrice", required = false) Double minPrice,
+                            @RequestParam(value = "maxPrice", required = false) Double maxPrice) {
         List<Book> books;
-        if (keyword != null && !keyword.isEmpty()) {
-            books = bookService.searchBooks(keyword);
+        if ((keyword != null && !keyword.isEmpty()) || (minPrice != null && maxPrice != null)) {
+            books = bookService.searchBooks(keyword, minPrice, maxPrice);
         } else {
             books = bookService.getAllBooks();
         }

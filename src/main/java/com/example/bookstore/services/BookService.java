@@ -23,9 +23,17 @@ public class BookService {
         return bookRepository.findAll();
     }
 
-    public List<Book> searchBooks(String keyword) {
-        return bookRepository.findByTitleContainingOrAuthorContainingOrCategoryContaining( keyword, keyword,keyword);
+    public List<Book> searchBooks(String keyword, Double minPrice, Double maxPrice) {
+        if (keyword != null && !keyword.isEmpty()) {
+            return bookRepository.findByTitleContainingOrAuthorContainingOrCategoryContaining(keyword, keyword, keyword);
+        } else if (minPrice != null && maxPrice != null) {
+            return bookRepository.findByPriceBetween(minPrice, maxPrice);
+        } else {
+            return bookRepository.findAll();
+        }
     }
+
+
 
     public void addBook(Book book) {
         bookRepository.save(book);

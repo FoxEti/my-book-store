@@ -46,10 +46,14 @@
 <h1>Let's start shopping!</h1>
 <div class="container-book-table">
     <h1>Book Store</h1>
+
     <div class="actions-search-field">
-        <input type="text" id="searchField" placeholder="Search by book name, price, author or category" style="width: 50%;"/>
+        <input type="text" id="searchField" placeholder="Search by book name, author or category" style="width: 30%;"/>
+        <input type="number" id="minPrice" placeholder="Min Price" style="width: 10%;"/>
+        <input type="number" id="maxPrice" placeholder="Max Price" style="width: 10%;"/>
         <button id="searchButton">Search</button>
     </div>
+
     <table class="book-table">
         <thead>
         <tr>
@@ -112,7 +116,24 @@
 
     document.getElementById('searchButton').addEventListener('click', function () {
         const keyword = document.getElementById('searchField').value;
-        window.location.href = '/shopping?keyword=' + encodeURIComponent(keyword);
+        const minPrice = document.getElementById('minPrice').value;
+        const maxPrice = document.getElementById('maxPrice').value;
+
+        let url = '/shopping?';
+
+        if (keyword) {
+            url += 'keyword=' + encodeURIComponent(keyword) + '&';
+        }
+
+        if (minPrice) {
+            url += 'minPrice=' + encodeURIComponent(minPrice) + '&';
+        }
+
+        if (maxPrice) {
+            url += 'maxPrice=' + encodeURIComponent(maxPrice) + '&';
+        }
+
+        window.location.href = url.slice(0, -1); // Remove trailing '&'
     });
 
 </script>

@@ -19,14 +19,13 @@ public class ShoppingController {
     }
 
     @GetMapping("/shopping")
-    public String shoppingPage(Model model,@RequestParam(value = "keyword", required = false) String keyword) {
-        List<Book> books;
-        if (keyword != null && !keyword.isEmpty()) {
-            books = bookService.searchBooks(keyword);
-        } else {
-            books = bookService.getAllBooks();
-        }
+    public String shoppingPage(Model model,
+                               @RequestParam(value = "keyword", required = false) String keyword,
+                               @RequestParam(value = "minPrice", required = false) Double minPrice,
+                               @RequestParam(value = "maxPrice", required = false) Double maxPrice) {
+        List<Book> books = bookService.searchBooks(keyword, minPrice, maxPrice);
         model.addAttribute("books", books);
         return "shopping";
     }
+
 }
