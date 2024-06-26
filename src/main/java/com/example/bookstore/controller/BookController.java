@@ -1,9 +1,11 @@
 package com.example.bookstore.controller;
 
 import com.example.bookstore.models.Book;
+import com.example.bookstore.models.Category;
 import com.example.bookstore.services.BookService;
 import com.example.bookstore.services.CartItemService;
 import com.example.bookstore.services.CartService;
+import com.example.bookstore.services.CategoryService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -15,9 +17,11 @@ public class BookController {
 
     private final BookService bookService;
     private final CartItemService cartItemService;
-    public BookController(BookService bookService, CartItemService cartItemService) {
+    private final CategoryService categoryService;
+    public BookController(BookService bookService, CartItemService cartItemService, CategoryService categoryService) {
         this.bookService = bookService;
         this.cartItemService = cartItemService;
+        this.categoryService = categoryService;
     }
 
     @GetMapping("/bookDetails/{id}")
@@ -39,9 +43,14 @@ public class BookController {
             @RequestParam String author,
             @RequestParam Double price,
             @RequestParam String detailsBook,
-            @RequestParam String category,
+            @RequestParam Long categoryId,
             @RequestParam Integer stockBook
     ) {
+        Category category = categoryService.getCategoryById(categoryId);
+        if (category == null) {
+
+            return "redirect:/admin"; // Redirect to admin page or show error message
+        }
         if (id <= 0) {
             // Create a new book object and save it to the database
             Book newBook = new Book(imageUrl, title, author, price, detailsBook, category, stockBook);

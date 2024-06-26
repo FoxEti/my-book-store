@@ -3,7 +3,9 @@ package com.example.bookstore.models;
 import jakarta.persistence.*;
 
 @Entity
+@Table(name = "category")
 public class Category {
+
     @Id
     @SequenceGenerator(
             name = "category_sequence",
@@ -14,7 +16,10 @@ public class Category {
             strategy = GenerationType.SEQUENCE,
             generator = "category_sequence"
     )
+    @Column(name = "id")
     private Long id;
+
+    @Column(name = "category_name")
     private String categoryName;
 
     public Category(String categoryName){
