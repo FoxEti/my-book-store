@@ -83,4 +83,8 @@ public class CartItemService {
     public void deleteCartItem(Long cartItemId) {
         cartItemRepository.deleteCartItem(cartItemId);
     }
+
+    public List<CartItem> getCartItemsByCartId(Cart cart) {
+        return cartItemRepository.findByCart(cart);
+    }
 }

@@ -54,7 +54,7 @@ public class BookController {
         if (id <= 0) {
             // Create a new book object and save it to the database
             Book newBook = new Book(imageUrl, title, author, price, detailsBook, category, stockBook);
-            bookService.addBook(newBook);
+            bookService.saveBook(newBook);
         } else {
             Book existingBook = new Book(id, imageUrl, title, author, price, detailsBook, category, stockBook);
             bookService.updateBook(id, existingBook);

@@ -15,9 +15,8 @@
 <!-- Form for submitting order details -->
 <form id="paymentForm" th:action="@{/processPayment}" method="post">
     <input type="hidden" id="id" name="id" value="0"/>
-
     <input type="hidden" id="totalPrice" name="totalPrice" th:value="${totalPrice}"/>
-
+    <input type="hidden" id="userId" name="userId" th:value="${userId}"/>
 
     <div class="form-group">
         <label for="address">Address:</label>
