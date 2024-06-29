@@ -19,4 +19,8 @@ public class OrderService {
         // You can add more business logic here before saving to repository
         orderRepository.save(order);
     }
+
+    public Order getOrderByStatus(Order.OrderStatus status) {
+        return orderRepository.findByOrderStatus(status);
+    }
 }

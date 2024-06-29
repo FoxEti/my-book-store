@@ -13,7 +13,11 @@ import java.util.Optional;
 
 @Repository
 public interface CartRepository extends JpaRepository<Cart, Long> {
-    Optional<Cart> findByUserId(Long userId);
 
-    Cart findByUser(Users user);
+
+    @Query("SELECT c FROM Cart c WHERE c.user.id = :userId AND c.cartStatus = :cartStatus")
+    Optional<Cart> findByUserIdAndCartStatus(@Param("userId") Long userId, @Param("cartStatus") Cart.CartStatus cartStatus);
+
+    @Query("SELECT c FROM Cart c WHERE c.user.id = :userId AND c.cartStatus = :cartStatus")
+    Cart findByUserAndCartStatus(@Param("userId") Long userId,@Param("cartStatus") Cart.CartStatus cartStatus);
 }

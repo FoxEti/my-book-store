@@ -52,19 +52,20 @@ public class OrderController {
                                  @RequestParam Long userId) {
 
         Cart currntCart = cartService.getCartByUserId(userId);
+        currntCart.setCartStatus(Cart.CartStatus.COMPLETED);
         Order order = new Order();
         //insert values into the DB
         order.setAddress(address);
         order.setPhoneNumber(phoneNumber);
         order.setShippingType(shippingType);
-        order.setOrderStatus(Order.OrderStatus.NEW); // Set order status to NEW
+        order.setOrderStatus(Order.OrderStatus.COMPLETED); // Set order status to NEW
         order.setOrderDate(new Date()); // Set current date/time
         order.setTotalPrice(totalPrice);
         order.setCartId(currntCart.getId());
         orderService.saveOrder(order); // Save order via service
 
-        // Update book inventory based on the user's cart
-        List<CartItem> cartItems = cartItemService.getCartItemsByCartId(currntCart); // Replace with your cart fetching logic
+        //Update the amount of book stock according to the user's cart
+        List<CartItem> cartItems = cartItemService.getCartItemsByCartId(currntCart);
         for (CartItem cartItem : cartItems) {
             Book book = cartItem.getBook();
             int quantityInCart = cartItem.getQuantity();
@@ -77,6 +78,12 @@ public class OrderController {
 
         }
 
+        //Update the user with a new cart
+        Cart newCart = new Cart();
+        newCart.setCartStatus(Cart.CartStatus.IN_PROCESS);
+        Users currentUser = usersService.findUserById(userId);
+        newCart.setUser(currentUser);
+        cartService.saveCart(newCart);
         return "redirect:/";
     }
 

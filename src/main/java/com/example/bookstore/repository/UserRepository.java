@@ -15,7 +15,7 @@ public interface UserRepository extends JpaRepository<Users, Long> {
             "or lower(u.password) like lower(concat('%', :searchTerm, '%'))")
     List<Users> search(@Param("searchTerm") String searchTerm);
 
-    Users findUserById(Users userId);
+    Users findUserById(Long userId);
 
     Users findByUserName(String userName);
 }
