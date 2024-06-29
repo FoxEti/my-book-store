@@ -32,7 +32,7 @@ public class WebSecurityConfig {
                 .authorizeHttpRequests((requests) -> requests
                         .requestMatchers("/", "/home", "/login", "/register", "/shopping","/css/**", "/images/**").permitAll()
                         .requestMatchers("/bookDetails/**").permitAll()
-                        .requestMatchers("/cart").authenticated()
+                        .requestMatchers("/cart","/order").authenticated()
                         .requestMatchers("/admin").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
@@ -40,8 +40,10 @@ public class WebSecurityConfig {
                         .loginPage("/login")
                         .permitAll()
                 )
-                .logout(LogoutConfigurer::permitAll);
-
+                .logout(LogoutConfigurer::permitAll)
+                .headers(headers -> headers
+                        .frameOptions(frameOptions -> frameOptions.sameOrigin())
+                );
         http.userDetailsService(customUserDetailsService);
 
         return http.build();

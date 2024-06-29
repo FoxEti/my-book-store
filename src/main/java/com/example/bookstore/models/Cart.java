@@ -9,12 +9,13 @@ import java.util.List;
 @Entity
 @Table
 public class Cart {
-    @Id
+
     @SequenceGenerator(
             name = "cart_sequence",
             sequenceName = "cart_sequence",
             allocationSize = 1
     )
+    @Id
     @GeneratedValue(
             strategy = GenerationType.SEQUENCE,
             generator = "cart_sequence"
@@ -28,11 +29,28 @@ public class Cart {
     @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<CartItem> items = new ArrayList<>();
 
+    @Enumerated(EnumType.STRING)
+    private Cart.CartStatus cartStatus;
+
+    public enum CartStatus {
+        IN_PROCESS,
+        COMPLETED
+    }
+
     public Cart() {
     }
 
+
     public Cart(List<CartItem> items){
         this.items = items;
+    }
+
+    public Cart.CartStatus getCartStatus() {
+        return cartStatus;
+    }
+
+    public void setCartStatus(Cart.CartStatus cartStatus) {
+        this.cartStatus = cartStatus;
     }
 
     public Long getId() {
@@ -42,7 +60,6 @@ public class Cart {
     public void setId(Long id) {
         this.id = id;
     }
-
 
     public List<CartItem> getItems() {
         return items;

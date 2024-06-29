@@ -1,6 +1,7 @@
 package com.example.bookstore.services;
 
 import com.example.bookstore.models.Book;
+import com.example.bookstore.models.Category;
 import com.example.bookstore.repository.BookRepository;
 import org.springframework.stereotype.Service;
 import java.util.List;
@@ -10,9 +11,11 @@ import java.util.Optional;
 public class BookService {
 
     private final BookRepository bookRepository;
+    private final CategoryService categoryService;
 
-    public BookService(BookRepository bookRepository) {
+    public BookService(BookRepository bookRepository, CategoryService categoryService) {
         this.bookRepository = bookRepository;
+        this.categoryService = categoryService;
     }
 
     public Book getBookById(Long bookId) {
@@ -25,7 +28,7 @@ public class BookService {
 
     public List<Book> searchBooks(String keyword, Double minPrice, Double maxPrice) {
         if (keyword != null && !keyword.isEmpty()) {
-            return bookRepository.findByTitleContainingOrAuthorContainingOrCategoryContaining(keyword, keyword, keyword);
+            return bookRepository.findByTitleContainingOrAuthorContainingOrCategory_CategoryNameContaining(keyword, keyword, keyword);
         } else if (minPrice != null && maxPrice != null) {
             return bookRepository.findByPriceBetween(minPrice, maxPrice);
         } else {
@@ -35,7 +38,7 @@ public class BookService {
 
 
 
-    public void addBook(Book book) {
+    public void saveBook(Book book) {
         bookRepository.save(book);
     }
 

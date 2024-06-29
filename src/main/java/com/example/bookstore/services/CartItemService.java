@@ -1,10 +1,7 @@
 package com.example.bookstore.services;
 
 
-import com.example.bookstore.models.Book;
-import com.example.bookstore.models.Cart;
-import com.example.bookstore.models.CartItem;
-import com.example.bookstore.models.Users;
+import com.example.bookstore.models.*;
 import com.example.bookstore.repository.BookRepository;
 import com.example.bookstore.repository.CartItemRepository;
 import com.example.bookstore.repository.CartRepository;
@@ -22,33 +19,20 @@ import java.util.Optional;
 
 @Service
 public class CartItemService {
-    private static final Logger logger = LoggerFactory.getLogger(CartItemService.class);
 
     private final CartItemRepository cartItemRepository;
-    private final UserRepository userRepository;
     private final CartRepository cartRepository;
     private final BookService bookService;
-
-    public CartItemService(CartItemRepository cartItemRepository, UserRepository userRepository, CartRepository cartRepository, BookService bookServise){
+    private final OrderService orderService;
+    public CartItemService(CartItemRepository cartItemRepository, CartRepository cartRepository, BookService bookServise, OrderService orderService) {
         this.cartItemRepository = cartItemRepository;
-        this.userRepository = userRepository;
         this.cartRepository = cartRepository;
         this.bookService = bookServise;
-    }
-
-    private Users getCurrentUser() {
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        String userName;
-        if (principal instanceof UserDetails) {
-            userName = ((UserDetails) principal).getUsername();
-        } else {
-            userName = principal.toString();
-        }
-        return userRepository.findByUserName(userName);
+        this.orderService = orderService;
     }
 
     public List<CartItem> getCartItemsForUser(Users currentUser) {
-        Cart cart = cartRepository.findByUser(currentUser);
+        Cart cart = cartRepository.findByUserAndCartStatus(currentUser.getId(), Cart.CartStatus.IN_PROCESS);
         if (cart == null) {
             return new ArrayList<>();
         }
@@ -71,16 +55,20 @@ public class CartItemService {
         }
     }
 
-    // Method to get the cart by user, implement according to your logic
+    // Method to get the cart by user
     private Cart getCartByUser(Users user) {
-        // Fetch the cart for the user
-        return cartRepository.findByUser(user);
+        return cartRepository.findByUserAndCartStatus(user.getId(), Cart.CartStatus.IN_PROCESS);
     }
+
     public void deleteCartItemByBookId(Long bookId) {
         cartItemRepository.deleteByBookId(bookId);
     }
 
     public void deleteCartItem(Long cartItemId) {
         cartItemRepository.deleteCartItem(cartItemId);
+    }
+
+    public List<CartItem> getCartItemsByCartId(Cart cart) {
+        return cartItemRepository.findByCart(cart);
     }
 }

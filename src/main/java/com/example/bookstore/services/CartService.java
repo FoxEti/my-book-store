@@ -26,7 +26,7 @@ public class CartService {
 
     @Transactional
     public Cart getCartByUserId(Long userId) {
-        return cartRepository.findByUserId(userId).orElseGet(() -> {
+        return cartRepository.findByUserIdAndCartStatus(userId,Cart.CartStatus.IN_PROCESS).orElseGet(() -> {
             Cart cart = new Cart();
             cart.setUser(userRepository.findById(userId).orElse(null));
             return cartRepository.save(cart);
@@ -42,5 +42,9 @@ public class CartService {
 
     public Optional<Cart> findCartById(Long cartId) {
         return cartRepository.findById(cartId);
+    }
+
+    public void saveCart(Cart newCart) {
+        cartRepository.save(newCart);
     }
 }

@@ -45,6 +45,7 @@ public class UsersService  {
         userRepository.save(user);
 
         Cart cart = new Cart();
+        cart.setCartStatus(Cart.CartStatus.IN_PROCESS);
         cart.setUser(user);
         cartRepository.save(cart);
     }
@@ -54,4 +55,11 @@ public class UsersService  {
     }
 
 
+    public Users findByUsername(String username) {
+        return userRepository.findByUserName(username);
+    }
+
+    public Users findUserById(Long userId) {
+        return userRepository.findUserById(userId);
+    }
 }

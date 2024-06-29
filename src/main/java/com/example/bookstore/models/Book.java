@@ -26,11 +26,15 @@ public class Book {
     private Double price;
     private String details;
     private String imageUrl;
-    private String category;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "category_id")
+    private Category category;
+
     private Integer stockBook;
 
 
-    public Book(Long id, String imageUrl, String title, String author, Double price, String detailsBook, String category, Integer stockBook) {
+    public Book(Long id, String imageUrl, String title, String author, Double price, String detailsBook, Category category, Integer stockBook) {
         this.id = id;
         this.imageUrl = imageUrl;
         this.title = title;
@@ -56,7 +60,7 @@ public class Book {
         this.id = id;
     }
 
-    public Book(String imageUrl, String title, String author, Double price, String detailsBook, String category, Integer stockBook) {
+    public Book(String imageUrl, String title, String author, Double price, String detailsBook, Category category, Integer stockBook) {
         this.imageUrl = imageUrl;
         this.title = title;
         this.author = author;
@@ -94,6 +98,14 @@ public class Book {
         this.price = price;
     }
 
+    public Category getCategory() {
+        return category;
+    }
+
+    public void setCategory(Category category){
+        this.category = category;
+    }
+
     public String getImageUrl() {
         return imageUrl;
     }
@@ -119,13 +131,6 @@ public class Book {
         this.id = id;
     }
 
-    public String getCategory() {
-        return category;
-    }
-
-    public void setCategory(String category) {
-        this.category = category;
-    }
 
     public void setStockBook(Integer stockBook) {
         this.stockBook = stockBook;

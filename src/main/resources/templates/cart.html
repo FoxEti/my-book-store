@@ -3,7 +3,7 @@
       xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
 <head>
     <title>Cart</title>
-    <link rel="stylesheet" th:href="@{/css/style.css}" />
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
 </head>
 <body>
 <nav class="nav-bar">
@@ -42,16 +42,7 @@
         </li>
     </ul>
 </nav>
-<h1>Welcome to the Cart Page!</h1>
-
-<div class="user-details" th:if="${currentUser != null}">
-    <h2>User Details</h2>
-    <p><strong>Username:</strong> <span th:text="${currentUser.userName}"></span></p>
-    <p><strong>Email:</strong> <span th:text="${currentUser.email}"></span></p>
-</div>
-<div class="user-details" th:if="${currentUser == null}">
-    <p>User details are not available.</p>
-</div>
+<h1>My cart</h1>
 
 <div class="container-book-table">
     <h1>Book Store</h1>
@@ -72,15 +63,21 @@
             <td th:text="${cartItem.book.price}"></td>
             <td th:text="${bookQuantities[cartItem.book.id]}"></td>
             <td>
-            <button class="btn btn-danger" th:onclick="'deleteFromCart(' + ${cartItem.id} + ')'">Delete</button>
+                <button class="btn btn-danger" th:onclick="'deleteFromCart(' + ${cartItem.id} + ')'">Delete</button>
             </td>
         </tr>
         </tbody>
     </table>
+
     <div class="final-price">
         <label>Total Price: </label>
         <span th:text="${totalPrice}"></span>
     </div>
+
+    <div class="payment">
+        <a class="btn btn-primary" th:href="@{/order(totalPrice=${totalPrice})}">Payment</a>
+    </div>
+
 </div>
 
 <script>
@@ -91,7 +88,7 @@
                 'Content-Type': 'application/json',
                 'X-CSRF-TOKEN': `[[${_csrf.token}]]`
             },
-            body: JSON.stringify({ cartItemId: cartItemId })
+            body: JSON.stringify({cartItemId: cartItemId})
         })
             .then(response => {
                 if (response.ok) {
@@ -111,7 +108,6 @@
             });
     }
 </script>
-
 
 
 </body>
