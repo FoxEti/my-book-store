@@ -89,7 +89,6 @@ public class OrderController {
             }
         }
 
-
         return "redirect:/orderCompleted";
     }
 
