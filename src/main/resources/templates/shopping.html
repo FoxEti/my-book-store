@@ -51,6 +51,14 @@
         <input type="text" id="searchField" placeholder="Search by book name, author or category" style="width: 30%;"/>
         <input type="number" id="minPrice" placeholder="Min Price" style="width: 10%;"/>
         <input type="number" id="maxPrice" placeholder="Max Price" style="width: 10%;"/>
+
+        <select id="categorySelect" style="width: 15%;">
+            <option value="">All Categories</option>
+            <option value="children">Children</option>
+            <option value="adults">Adults</option>
+            <option value="youth">Youth</option>
+        </select>
+
         <button id="searchButton">Search</button>
     </div>
 
@@ -118,6 +126,7 @@
         const keyword = document.getElementById('searchField').value;
         const minPrice = document.getElementById('minPrice').value;
         const maxPrice = document.getElementById('maxPrice').value;
+        const category = document.getElementById('categorySelect').value;
 
         let url = '/shopping?';
 
@@ -131,6 +140,10 @@
 
         if (maxPrice) {
             url += 'maxPrice=' + encodeURIComponent(maxPrice) + '&';
+        }
+
+        if (category) {
+            url += 'category=' + encodeURIComponent(category) + '&';
         }
 
         window.location.href = url.slice(0, -1); // Remove trailing '&'

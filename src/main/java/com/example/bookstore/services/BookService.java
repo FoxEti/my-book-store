@@ -26,17 +26,32 @@ public class BookService {
         return bookRepository.findAll();
     }
 
-    public List<Book> searchBooks(String keyword, Double minPrice, Double maxPrice) {
+    public List<Book> searchBooks(String keyword, Double minPrice, Double maxPrice,String category) {
         if (keyword != null && !keyword.isEmpty()) {
-            return bookRepository.findByTitleContainingOrAuthorContainingOrCategory_CategoryNameContaining(keyword, keyword, keyword);
+            return bookRepository.searchBooks(keyword.toLowerCase());
         } else if (minPrice != null && maxPrice != null) {
             return bookRepository.findByPriceBetween(minPrice, maxPrice);
-        } else {
-            return bookRepository.findAll();
+        } else if (category != null && !category.isEmpty()) {
+            Long categoryId;
+            switch (category.toLowerCase()) {
+                case "children":
+                    categoryId = 1L;
+                    break;
+                case "youth":
+                    categoryId = 2L;
+                    break;
+                case "adults":
+                    categoryId = 3L;
+                    break;
+                default:
+                    categoryId = null;
+            }
+            if (categoryId != null) {
+                return bookRepository.findByCategoryId(categoryId);
+            }
         }
+        return bookRepository.findAll();
     }
-
-
 
     public void saveBook(Book book) {
         bookRepository.save(book);

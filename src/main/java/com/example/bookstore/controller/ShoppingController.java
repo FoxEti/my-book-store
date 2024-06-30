@@ -22,8 +22,9 @@ public class ShoppingController {
     public String shoppingPage(Model model,
                                @RequestParam(value = "keyword", required = false) String keyword,
                                @RequestParam(value = "minPrice", required = false) Double minPrice,
-                               @RequestParam(value = "maxPrice", required = false) Double maxPrice) {
-        List<Book> books = bookService.searchBooks(keyword, minPrice, maxPrice);
+                               @RequestParam(value = "maxPrice", required = false) Double maxPrice,
+                               @RequestParam(value = "category",required = false) String category) {
+        List<Book> books = bookService.searchBooks(keyword, minPrice, maxPrice,category);
         model.addAttribute("books", books);
         return "shopping";
     }
