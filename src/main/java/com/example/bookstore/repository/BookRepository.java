@@ -17,8 +17,16 @@ public interface BookRepository extends JpaRepository<Book, Long> {
 
     Book findBookById(Long bookId);
 
-    List<Book> findByTitleContainingOrAuthorContainingOrCategory_CategoryNameContaining(String title, String author, String categoryName);
+    @Query("SELECT b FROM Book b WHERE " +
+            "(:keyword IS NULL OR lower(b.title)  LIKE %:keyword% OR lower(b.author) LIKE %:keyword% OR lower(b.category.categoryName) LIKE %:keyword%) ")
+    List<Book> searchBooks(@Param("keyword") String keyword);
+
     List<Book> findByPriceBetween(Double minPrice, Double maxPrice);
+
+    @Query("SELECT b FROM Book b WHERE b.category.id = :categoryId")
+    List<Book> findByCategoryId(@Param("categoryId") Long categoryId);
+
+    List<Book> findAllById(Iterable<Long> ids);
 }
 
 

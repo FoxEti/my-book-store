@@ -19,10 +19,11 @@ public class adminController {
     public String adminPage(Model model,
                             @RequestParam(value = "keyword", required = false) String keyword,
                             @RequestParam(value = "minPrice", required = false) Double minPrice,
-                            @RequestParam(value = "maxPrice", required = false) Double maxPrice) {
+                            @RequestParam(value = "maxPrice", required = false) Double maxPrice,
+                            @RequestParam(value = "category",required = false) String category) {
         List<Book> books;
         if ((keyword != null && !keyword.isEmpty()) || (minPrice != null && maxPrice != null)) {
-            books = bookService.searchBooks(keyword, minPrice, maxPrice);
+            books = bookService.searchBooks(keyword, minPrice, maxPrice,category);
         } else {
             books = bookService.getAllBooks();
         }

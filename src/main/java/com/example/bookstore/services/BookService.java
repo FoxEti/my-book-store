@@ -1,11 +1,13 @@
 package com.example.bookstore.services;
 
 import com.example.bookstore.models.Book;
+import com.example.bookstore.models.CartItem;
 import com.example.bookstore.models.Category;
 import com.example.bookstore.repository.BookRepository;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class BookService {
@@ -26,17 +28,32 @@ public class BookService {
         return bookRepository.findAll();
     }
 
-    public List<Book> searchBooks(String keyword, Double minPrice, Double maxPrice) {
+    public List<Book> searchBooks(String keyword, Double minPrice, Double maxPrice,String category) {
         if (keyword != null && !keyword.isEmpty()) {
-            return bookRepository.findByTitleContainingOrAuthorContainingOrCategory_CategoryNameContaining(keyword, keyword, keyword);
+            return bookRepository.searchBooks(keyword.toLowerCase());
         } else if (minPrice != null && maxPrice != null) {
             return bookRepository.findByPriceBetween(minPrice, maxPrice);
-        } else {
-            return bookRepository.findAll();
+        } else if (category != null && !category.isEmpty()) {
+            Long categoryId;
+            switch (category.toLowerCase()) {
+                case "children":
+                    categoryId = 1L;
+                    break;
+                case "youth":
+                    categoryId = 2L;
+                    break;
+                case "adults":
+                    categoryId = 3L;
+                    break;
+                default:
+                    categoryId = null;
+            }
+            if (categoryId != null) {
+                return bookRepository.findByCategoryId(categoryId);
+            }
         }
+        return bookRepository.findAll();
     }
-
-
 
     public void saveBook(Book book) {
         bookRepository.save(book);
@@ -56,5 +73,15 @@ public class BookService {
         existingBook.setCategory(book.getCategory());
         existingBook.setStockBook(book.getStockBook());
         bookRepository.save(existingBook);
+    }
+
+    public List<Book> getBooksByCartItems(List<CartItem> orderedBooks) {
+        // Extract book IDs from the orderedBooks list
+        List<Long> bookIds = orderedBooks.stream()
+                .map(cartItem -> cartItem.getBook().getId())
+                .collect(Collectors.toList());
+
+        // Use the book repository to find all books by their IDs
+        return bookRepository.findAllById(bookIds);
     }
 }

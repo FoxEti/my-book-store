@@ -16,7 +16,8 @@ import java.util.Optional;
 @Repository
 public interface CartItemRepository extends JpaRepository<CartItem, Long> {
 
-    List<CartItem> findByCart(Cart cart);
+    @Query("SELECT ci FROM CartItem ci WHERE ci.cart.id = :cartId")
+    List<CartItem> findByCart(@Param("cartId")Long cartId);
 
 
     CartItem findByCartAndBook(Cart cart, Book book);

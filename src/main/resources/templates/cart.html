@@ -75,7 +75,12 @@
     </div>
 
     <div class="payment">
-        <a class="btn btn-primary" th:href="@{/order(totalPrice=${totalPrice})}">Payment</a>
+        <!-- Check if errorMessage exists in model -->
+        <div th:if="${errorMessage}" class="alert alert-danger" role="alert">
+            <span th:text="${errorMessage}"></span>
+        </div>
+        <!-- Proceed to payment only if cart is not empty -->
+        <a th:if="${not #strings.isEmpty(totalPrice)}" class="btn btn-primary" th:href="@{/order(totalPrice=${totalPrice})}">Payment</a>
     </div>
 
 </div>

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Order Completed</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+<nav class="nav-bar">
+    <ul>
+        <li><a th:href="@{/home}">Home</a></li>
+        <li><a th:href="@{/shopping}">Shopping</a></li>
+
+        <!-- Conditional rendering based on user authentication -->
+        <li th:if="${#authorization.expression('isAuthenticated() and !hasRole(''ADMIN'')')}">
+            <a th:href="@{/cart}">Cart</a>
+        </li>
+
+        <li th:if="${#authorization.expression('isAuthenticated() and hasRole(''ADMIN'')')}">
+            <a th:href="@{/admin}">Admin</a>
+        </li>
+
+
+        <li th:if="${#authorization.expression('!isAuthenticated()')}">
+            <a th:href="@{/login}">Login</a>
+        </li>
+
+        <li th:if="${#authorization.expression('!isAuthenticated()')}">
+            <a th:href="@{/register}">Register</a>
+        </li>
+
+        <!-- Logout form -->
+        <li th:if="${#authorization.expression('isAuthenticated()')}">
+            <form th:action="@{/logout}" method="post">
+                <input type="submit" value="Sign Out"/>
+            </form>
+        </li>
+
+        <!-- Display username if authenticated -->
+        <li class="nav-user" th:if="${#authorization.expression('isAuthenticated()')}">
+            <span class="username-circle" th:text="${#authentication.name}"></span>
+        </li>
+    </ul>
+</nav>
+<h1>Order Details</h1>
+
+<div class="order-details">
+    <h2>Payment successfully received!</h2>
+    <h3>Thanks!</h3>
+    <table>
+        <thead>
+        <tr>
+            <th>Image</th>
+            <th>Title</th>
+        </tr>
+        </thead>
+        <tbody>
+        <!-- Loop through ordered books and display details -->
+        <tr th:each="book : ${books}">
+            <td><img th:src="@{${book.imageUrl}}" alt="Book Image"/></td>
+            <td th:text="${book.title}"></td>
+        </tr>
+        </tbody>
+    </table>
+
+    <h2>Total Price</h2>
+    <p>Total Price: <span th:text="${totalPrice}"></span></p>
+</div>
+</body>
+</html>

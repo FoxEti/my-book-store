@@ -25,9 +25,10 @@ public class CartService {
     }
 
     @Transactional
-    public Cart getCartByUserId(Long userId) {
+    public Cart getOrCreateCartByUserId(Long userId) {
         return cartRepository.findByUserIdAndCartStatus(userId,Cart.CartStatus.IN_PROCESS).orElseGet(() -> {
             Cart cart = new Cart();
+            cart.setCartStatus(Cart.CartStatus.IN_PROCESS);
             cart.setUser(userRepository.findById(userId).orElse(null));
             return cartRepository.save(cart);
         });
@@ -35,7 +36,7 @@ public class CartService {
 
     @Transactional
     public void removeItemFromCart(Long userId, Long itemId) {
-        Cart cart = getCartByUserId(userId);
+        Cart cart = getOrCreateCartByUserId(userId);
         cart.getItems().removeIf(item -> item.getId().equals(itemId));
         cartRepository.save(cart);
     }
@@ -46,5 +47,19 @@ public class CartService {
 
     public void saveCart(Cart newCart) {
         cartRepository.save(newCart);
+    }
+
+
+    public Optional<Cart> getCartByUserId(Long userId) {
+        return cartRepository.findByUserIdAndCartStatus(userId,Cart.CartStatus.IN_PROCESS);
+    }
+
+    public Optional<Cart> getCartRecent(Long userId) {
+        Long maxId = cartRepository.findMaxIdByUserId(userId);
+        if (maxId != null) {
+            return cartRepository.findByCartId(maxId);
+        } else {
+            return Optional.empty();
+        }
     }
 }

@@ -36,12 +36,12 @@ public class CartItemService {
         if (cart == null) {
             return new ArrayList<>();
         }
-        return cartItemRepository.findByCart(cart);
+        return cartItemRepository.findByCart(cart.getId());
     }
 
-    public void addOrUpdateCartItem(Users user, Long bookId, int quantity) {
+    public void addOrUpdateCartItem(Users user, Long bookId, int quantity,Cart cart) {
         Book book = bookService.getBookById(bookId);
-        Cart cart = getCartByUser(user); // Implement this method to get the cart by user
+
         CartItem existingCartItem = cartItemRepository.findByCartAndBook(cart, book);
         if (existingCartItem != null) {
             existingCartItem.setQuantity(existingCartItem.getQuantity() + quantity);
@@ -69,6 +69,10 @@ public class CartItemService {
     }
 
     public List<CartItem> getCartItemsByCartId(Cart cart) {
-        return cartItemRepository.findByCart(cart);
+        return cartItemRepository.findByCart(cart.getId());
+    }
+
+    public List<CartItem> getCurrentOrderedBooks(Cart cart) {
+       return cartItemRepository.findByCart(cart.getId());
     }
 }

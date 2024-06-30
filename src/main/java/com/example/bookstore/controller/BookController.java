@@ -31,8 +31,8 @@ public class BookController {
         return "bookDetails"; // The name of your HTML template for book details
     }
 
-    public Book getBookById(Book book) {
-        return bookService.getBookById(book.getId());
+    public Book getBookById(Long bookId) {
+        return bookService.getBookById(bookId);
     }
 
     @PostMapping("/admin/book")

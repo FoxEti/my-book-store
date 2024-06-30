@@ -54,7 +54,7 @@ public class CartController {
         Map<Long, Integer> bookQuantities = new HashMap<>();
         for (CartItem cartItem : cartItems) {
 
-            Book book = bookService.getBookById(cartItem.getBook());
+            Book book = bookService.getBookById(cartItem.getBook().getId());
             cartItem.setBook(book); // Assuming you have a setter for Book in CartItem
             totalPrice += book.getPrice() * cartItem.getQuantity();
 
@@ -70,11 +70,18 @@ public class CartController {
     @PostMapping("/add-to-cart")
     public ResponseEntity<?> addToCart(@RequestBody Map<String, Long> payload) {
         Long bookId = payload.get("bookId");
+        Book currentBook = bookService.getBookById(bookId);
+        if(currentBook.getStockBook()<=0){
+            return ResponseEntity.badRequest().body("Book is out of stock.");
+
+        }
         Users currentUser = userService.getCurrentUser();
         if (currentUser == null) {
             return ResponseEntity.badRequest().body("User not logged in...");
         }
-        cartItemService.addOrUpdateCartItem(currentUser, bookId, 1);
+        Cart cart = cartService.getOrCreateCartByUserId(currentUser.getId());
+
+        cartItemService.addOrUpdateCartItem(currentUser, bookId, 1,cart);
         return ResponseEntity.ok().build();
     }
 
