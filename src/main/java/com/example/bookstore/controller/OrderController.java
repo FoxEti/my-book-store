@@ -87,7 +87,6 @@ public class OrderController {
                 book.setStockBook(updatedInventory);
                 bookService.saveBook(book);
             }
-
         }
 
 
