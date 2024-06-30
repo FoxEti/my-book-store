@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 public class OrderController {
@@ -38,6 +39,13 @@ public class OrderController {
         String username = authentication.getName();
         Users currentUser = usersService.findByUsername(username);
 
+        // Check if the user's cart is empty
+        List<CartItem> cartItems = cartItemService.getCartItemsForUser(currentUser);
+        if (cartItems.isEmpty()) {
+            model.addAttribute("errorMessage", "Your cart is empty.");
+            return "cart"; // Return to cart.html with an error message
+        }
+
         // Pass the user ID and totalPrice to the model
         model.addAttribute("userId", currentUser.getId());
         model.addAttribute("totalPrice", totalPrice);
@@ -51,8 +59,12 @@ public class OrderController {
                                  @RequestParam Double totalPrice,
                                  @RequestParam Long userId) {
 
-        Cart currntCart = cartService.getCartByUserId(userId);
-        currntCart.setCartStatus(Cart.CartStatus.COMPLETED);
+        Optional<Cart> optionalCart = cartService.getCartByUserId(userId);
+        if(!optionalCart.isPresent())
+            return "";
+
+        Cart currentCart = optionalCart.get();
+        currentCart.setCartStatus(Cart.CartStatus.COMPLETED);
         Order order = new Order();
         //insert values into the DB
         order.setAddress(address);
@@ -61,11 +73,11 @@ public class OrderController {
         order.setOrderStatus(Order.OrderStatus.COMPLETED); // Set order status to NEW
         order.setOrderDate(new Date()); // Set current date/time
         order.setTotalPrice(totalPrice);
-        order.setCartId(currntCart.getId());
+        order.setCartId(currentCart.getId());
         orderService.saveOrder(order); // Save order via service
 
         //Update the amount of book stock according to the user's cart
-        List<CartItem> cartItems = cartItemService.getCartItemsByCartId(currntCart);
+        List<CartItem> cartItems = cartItemService.getCartItemsByCartId(currentCart);
         for (CartItem cartItem : cartItems) {
             Book book = cartItem.getBook();
             int quantityInCart = cartItem.getQuantity();
@@ -78,14 +90,50 @@ public class OrderController {
 
         }
 
-        //Update the user with a new cart
-        Cart newCart = new Cart();
-        newCart.setCartStatus(Cart.CartStatus.IN_PROCESS);
-        Users currentUser = usersService.findUserById(userId);
-        newCart.setUser(currentUser);
-        cartService.saveCart(newCart);
-        return "redirect:/";
+
+        return "redirect:/orderCompleted";
     }
 
+    @GetMapping("/orderCompleted")
+    public String orderCompleted(Model model) {
+        // Get current user's ID
+        Long currentUserId = getCurrentUserId();
 
+        Optional<Cart> optionalCart = cartService.getCartRecent(currentUserId);
+        if(!optionalCart.isPresent())
+            return "";
+        Cart currentCart = optionalCart.get();
+
+        // Replace this with logic to fetch ordered books, e.g., from a database or service
+        List<CartItem> orderedBooks = cartItemService.getCurrentOrderedBooks(currentCart);
+
+        List<Book> books = bookService.getBooksByCartItems(orderedBooks);
+        // Calculate total price (assuming totalPrice is passed from the payment page)
+        double totalPrice = calculateTotalPrice(orderedBooks); // Implement your totalPrice calculation logic
+
+        // Add orderedBooks and totalPrice to the model
+        model.addAttribute("books", books);
+        model.addAttribute("totalPrice", totalPrice);
+
+
+        return "orderCompleted"; // Return the view name (orderCompleted.html)
+    }
+
+    private double calculateTotalPrice(List<CartItem> orderedBooks) {
+        double totalPrice = 0.0;
+        for (CartItem cartItem : orderedBooks) {
+            totalPrice += cartItem.getBook().getPrice(); // Assuming Book entity has getPrice() method
+        }
+        return totalPrice;
+    }
+
+    // Method to get current user's ID
+    private Long getCurrentUserId() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        // Implement logic to fetch current user's ID based on username
+        // Example: fetching from a user repository or service
+        Users user = usersService.findByUsername(username); // Replace with your actual logic
+        return user.getId();
+    }
 }

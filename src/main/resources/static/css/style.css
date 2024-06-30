@@ -318,3 +318,21 @@ select {
     font-size: 16px;
     width: 100%;
 }
+
+.order-details {
+    margin: 20px;
+}
+.order-details table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+.order-details th, .order-details td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+.order-details img {
+    max-width: 100px;
+    max-height: 100px;
+}

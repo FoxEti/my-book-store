@@ -25,6 +25,8 @@ public interface BookRepository extends JpaRepository<Book, Long> {
 
     @Query("SELECT b FROM Book b WHERE b.category.id = :categoryId")
     List<Book> findByCategoryId(@Param("categoryId") Long categoryId);
+
+    List<Book> findAllById(Iterable<Long> ids);
 }
 
 

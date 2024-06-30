@@ -1,11 +1,13 @@
 package com.example.bookstore.services;
 
 import com.example.bookstore.models.Book;
+import com.example.bookstore.models.CartItem;
 import com.example.bookstore.models.Category;
 import com.example.bookstore.repository.BookRepository;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class BookService {
@@ -71,5 +73,15 @@ public class BookService {
         existingBook.setCategory(book.getCategory());
         existingBook.setStockBook(book.getStockBook());
         bookRepository.save(existingBook);
+    }
+
+    public List<Book> getBooksByCartItems(List<CartItem> orderedBooks) {
+        // Extract book IDs from the orderedBooks list
+        List<Long> bookIds = orderedBooks.stream()
+                .map(cartItem -> cartItem.getBook().getId())
+                .collect(Collectors.toList());
+
+        // Use the book repository to find all books by their IDs
+        return bookRepository.findAllById(bookIds);
     }
 }

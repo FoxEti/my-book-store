@@ -74,7 +74,9 @@ public class CartController {
         if (currentUser == null) {
             return ResponseEntity.badRequest().body("User not logged in...");
         }
-        cartItemService.addOrUpdateCartItem(currentUser, bookId, 1);
+        Cart cart = cartService.getOrCreateCartByUserId(currentUser.getId());
+
+        cartItemService.addOrUpdateCartItem(currentUser, bookId, 1,cart);
         return ResponseEntity.ok().build();
     }
 
